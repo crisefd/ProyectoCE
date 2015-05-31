@@ -7,9 +7,23 @@
 require 'rubygems'
 require 'bundler/setup'
 
- class aplicacion
-	def initialize
-		puts "Hola mundo"
-	end
-
+class Cromosoma < Array
+  
 end
+
+class NReinas < Array
+
+	def inicializar_cromosomas(n=8)
+		@n = n
+		i = 0
+		while i < self.length do
+			rand_array = (0..@n).collect{rand(@n)}
+			cromosoma = Cromosoma.new(rand_array)
+			self[i] = cromosoma
+			i += 1
+		end
+	end
+end
+
+nr = NReinas.new(10)
+nr.inicializar_cromosomas
