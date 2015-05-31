@@ -25,7 +25,7 @@ class Cromosoma < Array
 
   #Se define el atributo aptitude del cromosoma, la igual
   #que los métodos de acceso
-  attr_accessor :aptitud
+  attr_accessor :aptitud, :num_genes
 
   #Da valores al azar a los genes y garantiza
   #que no se repitan
@@ -49,6 +49,50 @@ class Cromosoma < Array
   	end
 
   end
+
+  #Funcion de cruce uniforme
+  def cruzar!(cromosoma)
+  	#mascara = Array.new
+  	copia_cromosoma = Array.new(self)
+  	iteraciones = @num_genes - 1
+  	iteraciones.downto(0){|i|
+  		bit = rand(0..1)
+  		if bit == 0 then
+  			self[i] = copia_cromosoma[i]
+  		elsif bit == 1 then
+  			self[i] = cromosoma[i]
+  		end
+
+  		end
+  	}
+
+  end
+
+
+  	#Funcion de evaluacion del cromosoma
+  	#Es necesario validar que reinas se estan
+	#Atancado usando la formula de la pendiete:
+	# m = (X2 - X1)/(Y2 - Y1)
+   def evaluar!()
+		num_ataques = 0
+		for y2 in 0...@num_genes
+			x2 = self[y2]
+			for y1 in 0...@num_genes 
+				x1 = self[y1]
+				if y1 == y2 then
+					next
+				end
+				m = 1.0 * (x2 - x1) / (y2 - y1)
+				if m == -1.0 then
+					num_ataques += 1
+				end
+			end
+
+		end
+		@aptitud = -1.0 * num_ataques
+	end
+
+
 end
 
 =begin 
@@ -78,16 +122,23 @@ class NReinas < Array
 			i += 1
 		end
 	end
-end
 
+	#Funcion principal del algoritmo. 
+	#num_generaciones = iteraciones
+	def ejecutar(num_generaciones = 50)
 
-#Clase principal de la aplicacion
-class AlgoritmoGeneticoNReinas
-	def initialize
-		nr = NReinas.new
-		nr.inicializar_cromosomas
+	end
+
+	
+	
+
+	#Funcion que determina que cromosomas
+	#Pasaran a la siguiente generacion
+	def seleccionar_cromosomas
 	end
 end
 
-AlgoritmoGeneticoNReinas.new
+nr = NReinas.new
+nr.inicializar_cromosomas
+nr.ejecutar
 
