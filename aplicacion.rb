@@ -8,7 +8,7 @@ require 'rubygems'
 require 'bundler/setup'
 
 =begin
-Crosomoma es un array de genes. O sea, hereda de Array. 
+Crosomoma es un array de genes. o sea, hereda de Array. 
 Y los genes son números enteros. La posición en el Array indica la columna del tablero 
 y el contenido indica la fila donde se encuentra la Reina en esa columna. 
 El Cromosoma también debe contener su aptitud. 
@@ -22,11 +22,32 @@ al menos:
 * Cruce uniforme 	
 =end
 class Cromosoma < Array
+
+  #Se define el atributo aptitude del cromosoma, la igual
+  #que los métodos de acceso
   attr_accessor :aptitud
 
+  #Da valores al azar a los genes y garantiza
+  #que no se repitan
   def inicializar_genes()
+  	@num_genes = self.length
+  	@aptitud = 0
   	self.sort_by!{rand()}
-  	puts self
+  end
+
+  #Muta el cromosoma por intercambio de genes
+  def mutar
+  	pos1 = rand(0...@num_genes)
+  	pos2 = -1
+  	while true do
+  		pos2 = rand(0...@num_genes)
+  		if pos1 != pos2 then
+  			break
+  		end
+  	end
+  	self[pos1], self[pos2] = self[pos2], self[pos1]
+  	end
+
   end
 end
 
@@ -46,21 +67,27 @@ Las funciones que debe tener son, al menos:
 =end
 class NReinas < Array
 
-	def inicializar_cromosomas(num_cromosomas=10)
-		@num_cromosomas = num_cromosomas
+	def inicializar_cromosomas(dimension_tablero = 8)
+		@num_cromosomas = self.length
 		i = 0
-		while i < self.length do
-			#rand_array = (0..@n).collect{rand(@n)}
-			array = (0...@num_cromosomas).to_a
+		while i < @num_cromosomas do
+			array = (0...dimension_tablero).to_a
 			cromosoma = Cromosoma.new array
 			cromosoma.inicializar_genes
-			cromosoma.aptitud = 0
 			self[i] = cromosoma
-			#puts "==========="
 			i += 1
 		end
 	end
 end
 
-nr = NReinas.new
-nr.inicializar_cromosomas
+
+#Clase principal de la aplicacion
+class AlgoritmoGeneticoNReinas
+	def initialize
+		nr = NReinas.new
+		nr.inicializar_cromosomas
+	end
+end
+
+AlgoritmoGeneticoNReinas.new
+
