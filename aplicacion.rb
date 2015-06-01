@@ -48,7 +48,7 @@ class Cromosoma < Array
   	self[pos1], self[pos2] = self[pos2], self[pos1]
   	end
 
-  end
+  
 
   #Funcion de cruce uniforme
   def cruzar!(cromosoma)
@@ -63,7 +63,7 @@ class Cromosoma < Array
   			self[i] = cromosoma[i]
   		end
 
-  		end
+  		
   	}
 
   end
@@ -133,8 +133,29 @@ class NReinas < Array
 	
 
 	#Funcion que determina que cromosomas
-	#Pasaran a la siguiente generacion
-	def seleccionar_cromosomas
+	#Pasaran a la siguiente generacion.
+	# Se hace seleccion por torneo escogiendo
+	#k = 40% de los cromosomas y se toman de a
+	# 2 cromosomas por torneo
+	def seleccionar_cromosomas!
+		k = (0.4 * @num_cromosomas).to_i
+		k.downto(0) { |n|
+			while true do
+				x = rand(0...@num_cromosomas)
+				y = rand(0...@num_cromosomas)
+				if x == y then
+					break
+				end
+			end
+			crom_1 = self[x]
+			crom_2 = self[y]
+			if crom_1.aptitud > crom_2.aptitud then
+				self.delete_at(y)
+			else
+				self.delete_at(x)
+			end
+			@num_cromosomas -= 1
+		  }
 	end
 end
 
