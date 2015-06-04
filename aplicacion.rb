@@ -7,6 +7,8 @@
 require 'rubygems'
 require 'bundler/setup'
 
+
+
 =begin
 Crosomoma es un array de genes. o sea, hereda de Array. 
 Y los genes son números enteros. La posición en el Array indica la columna del tablero 
@@ -23,30 +25,26 @@ al menos:
 =end
 class Cromosoma < Array
 
+
+  #Variable de clase que cuenta la cantidad
+  # de veces que se llama a la función
+  #evaluar
+  @@num_evaluaciones = 0
+
   #Se define el atributo aptitude del cromosoma, la igual
   #que los métodos de acceso
-  attr_accessor :aptitud, :num_genes
+  attr_accessor :aptitud, :diversidad,:num_genes
 
   #Da valores al azar a los genes y garantiza
   #que no se repitan
   def inicializar_genes()
   	@num_genes = self.length
   	@aptitud = 0
+  	@diversidad = 0
   	self.sort_by!{rand()}
   end
 
-  #Muta el cromosoma por intercambio de genes
-  def mutar
-  	pos1 = rand(0...@num_genes)
-  	pos2 = -1
-  	while true do
-  		pos2 = rand(0...@num_genes)
-  		if pos1 != pos2 then
-  			break
-  		end
-  	end
-  	self[pos1], self[pos2] = self[pos2], self[pos1]
-  	end
+  
 
   
 
@@ -73,7 +71,8 @@ class Cromosoma < Array
   	#Es necesario validar que reinas se estan
 	#Atancado usando la formula de la pendiete:
 	# m = (X2 - X1)/(Y2 - Y1)
-   def evaluar!()
+   def evaluar!
+   		@@num_evaluaciones += 1
 		num_ataques = 0
 		for y2 in 0...@num_genes
 			x2 = self[y2]
@@ -90,6 +89,12 @@ class Cromosoma < Array
 
 		end
 		@aptitud = -1.0 * num_ataques
+	end
+
+	#Metodo getter para la variable de clase
+	# del numero de evaluaciones
+	def self.num_evaluaciones
+		@@num_evaluaciones
 	end
 
 
@@ -125,9 +130,40 @@ class NReinas < Array
 
 	#Funcion principal del algoritmo. 
 	#num_generaciones = iteraciones
-	def ejecutar(num_generaciones = 50)
+	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
+		if tipo_seleccion == 'torneo' then
+			1.upto(num_generaciones){|generacion|
+				evaluar_cromosomas!
+				seleccionar_cromosomas! tipo_seleccion
+		elsif tipo_seleccion = 'diversidad'
+			p "Falta implementar"
+			
+		end
 
+		}
 	end
+
+
+	def evaluar_cromosomas!
+		self.each_index { |i| 
+			self[i].evaluar!
+		 }
+	end
+
+	#Muta el cromosoma por intercambio de genes
+  	def mutar(cromosoma)
+  		cromosoma_mutado = cromosoma.clone
+  		pos1 = rand(0...cromosoma_mutado.num_genes)
+  		pos2 = -1
+  		while true do
+  			pos2 = rand(0...cromosoma_mutado.num_genes)
+  			if pos1 != pos2 then
+  				break
+  			end
+  		end
+  		cromosoma_mutado[pos1], cromosoma_mutado[pos2] = cromosoma_mutado[pos2], cromosoma_mutado[pos1]
+  		cromosoma_mutado
+  	end
 
 	
 	
@@ -135,27 +171,51 @@ class NReinas < Array
 	#Funcion que determina que cromosomas
 	#Pasaran a la siguiente generacion.
 	# Se hace seleccion por torneo escogiendo
-	#k = 40% de los cromosomas y se toman de a
-	# 2 cromosomas por torneo
-	def seleccionar_cromosomas!
-		k = (0.4 * @num_cromosomas).to_i
-		k.downto(0) { |n|
-			while true do
-				x = rand(0...@num_cromosomas)
-				y = rand(0...@num_cromosomas)
-				if x == y then
-					break
+	#k = 2 de los cromosomas y se toman de a
+	# 2 cromosomas por torneo. Al final se insertan
+	# los mutados a la población
+	def seleccionar_cromosomas!(tipo_seleccion)
+		if tipo_seleccion == 'torneo'
+			k = 2
+			k.downto(1) { |n|
+				while true do
+					x = rand(0...@num_cromosomas)
+					y = rand(0...@num_cromosomas)
+					if x == y then
+						break
+					end
 				end
-			end
-			crom_1 = self[x]
-			crom_2 = self[y]
-			if crom_1.aptitud > crom_2.aptitud then
-				self.delete_at(y)
-			else
-				self.delete_at(x)
-			end
-			@num_cromosomas -= 1
-		  }
+				crom_1 = self[x]
+				crom_2 = self[y]
+				if crom_1.aptitud > crom_2.aptitud then
+					self.delete_at(y)
+					self.push(mutar(self[x])
+				else
+					self.delete_at(x)
+					self.push(mutar(self[y])
+				end
+				#@num_cromosomas -= 1
+			  }
+		elsif tipo_seleccion == 'diversidad'
+			#p "Falta implementar"
+			aptitudes = Array.new(@num_cromosomas)
+			aptitudes.each_index { |i|
+				aptitudes[i] = self[i].aptitud  
+			}
+			max = aptitudes.max
+			min = aptitudes.min
+			array_cuentas = Array.new(-1 * min)
+			aptitudes.each{|aptitud|
+				array_cuentas[-1 * aptitud] += 1
+			}
+
+			ind_1 = array_cuentas.index(array_cuentas.min)
+			ind_2 = aptitudes.index(-1 * ind_1)
+			cromosoma = self[ind_2].clone
+			self.delete_at(ind_2)
+			self.push(mutar(cromosoma))
+			
+	    end
 	end
 end
 
