@@ -135,12 +135,10 @@ class NReinas < Array
 			1.upto(num_generaciones){|generacion|
 				evaluar_cromosomas!
 				seleccionar_cromosomas! tipo_seleccion
-		elsif tipo_seleccion = 'diversidad'
+				}
+		elsif tipo_seleccion == 'diversidad' then
 			p "Falta implementar"
-			
 		end
-
-		}
 	end
 
 
@@ -189,12 +187,11 @@ class NReinas < Array
 				crom_2 = self[y]
 				if crom_1.aptitud > crom_2.aptitud then
 					self.delete_at(y)
-					self.push(mutar(self[x])
-				else
-					self.delete_at(x)
-					self.push(mutar(self[y])
+					self.push(mutar(self[x]))
+					else
+						self.delete_at(x)
+						self.push(mutar(self[y]))
 				end
-				#@num_cromosomas -= 1
 			  }
 		elsif tipo_seleccion == 'diversidad'
 			#p "Falta implementar"
