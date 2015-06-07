@@ -44,20 +44,6 @@ class Cromosoma < Array
   	self.sort_by!{rand()}
   end
 
-  #Funcion de cruce uniforme
-	def cruzar!(cromosoma)
-		copia_cromosoma = Array.new(self)
-		iteraciones = @num_genes - 1
-		iteraciones.downto(0){|i|
-  		bit = rand(0..1)
-  		if bit == 0 then
-  			self[i] = copia_cromosoma[i]
-  		elsif bit == 1 then
-  			self[i] = cromosoma[i]
-  		end
-  	}
-  end
-
 	#Funcion de evaluacion del cromosoma
 	#Es necesario validar que reinas se estan
 	#Atancado usando la formula de la pendiete:
@@ -172,6 +158,21 @@ class NReinas < Array
   		p "Cromosoma mutado = #{cromosoma_mutado} "
   		cromosoma_mutado
   	end
+  	
+  	#Funcion de cruce uniforme
+	def cruzar(cromosoma1, cromosoma2)
+		nuevo_cromosoma = Cromosoma.new cromosoma1.length
+		iteraciones = @num_genes - 1
+		iteraciones.downto(0){|i|
+  		bit = rand(0..1)
+  		if bit == 0 then
+  			nuevo_cromosoma[i] = cromosoma1[i]
+  		elsif bit == 1 then
+  			nuevo_cromosoma[i] = cromosoma2[i]
+  		end
+  	}
+  	nuevo_cromosoma
+  end
 
 	#Funcion que determina que cromosomas
 	#Pasaran a la siguiente generacion.
