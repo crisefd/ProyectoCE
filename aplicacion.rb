@@ -26,37 +26,37 @@ al menos:
 class Cromosoma < Array
 
 
-  #Variable de clase que cuenta la cantidad
-  # de veces que se llama a la función
-  #evaluar
-  @@num_evaluaciones = 0
-
-  #Se define el atributo aptitude del cromosoma, al igual
-  #que los métodos de acceso
-  attr_accessor :aptitud, :diversidad, :num_genes
-
-  #Da valores al azar a los genes y garantiza
-  #que no se repitan
-  def inicializar_genes()
-  	@num_genes = self.length
-  	@aptitud = 0
-  	@diversidad = 0
-  	self.sort_by!{rand()}
-  end
-
-  #Funcion de cruce uniforme
+	#Variable de clase que cuenta la cantidad
+	# de veces que se llama a la función
+	#evaluar
+	@@num_evaluaciones = 0
+	
+	#Se define el atributo aptitude del cromosoma, al igual
+	#que los métodos de acceso
+	attr_accessor :aptitud, :diversidad, :num_genes
+	
+	#Da valores al azar a los genes y garantiza
+	#que no se repitan
+	def inicializar_genes()
+		@num_genes = self.length
+		@aptitud = 0
+		@diversidad = 0
+		self.sort_by!{rand()}
+	end
+	
+	 #Funcion de cruce uniforme
 	def cruzar!(cromosoma)
 		copia_cromosoma = Array.new(self)
 		iteraciones = @num_genes - 1
 		iteraciones.downto(0){|i|
-  		bit = rand(0..1)
-  		if bit == 0 then
-  			self[i] = copia_cromosoma[i]
-  		elsif bit == 1 then
-  			self[i] = cromosoma[i]
-  		end
-  	}
-  end
+ 		bit = rand(0..1)
+		if bit == 0 then
+	  		self[i] = copia_cromosoma[i]
+		elsif bit == 1 then
+			self[i] = cromosoma[i]
+		end
+	  	}
+	end
 
 	#Funcion de evaluacion del cromosoma
 	#Es necesario validar que reinas se estan
@@ -214,18 +214,18 @@ class NReinas < Array
 			aptitudes.each_index { |i|
 				aptitudes[i] = self[i].aptitud  
 			}
-			p "Aptitudes = #{aptitudes}"
+			#p "Aptitudes = #{aptitudes}"
 			max = aptitudes.max.to_i
 			min = aptitudes.min.to_i
-			p "min #{min}"
-			p "max #{max}"
+			#p "min #{min}"
+			#p "max #{max}"
 			fix_num_max = (2**(0.size * 8 -2) -1)
 			array_cuentas = Array.new -1 * min, 0
 			aptitudes.each{|aptitud|
 				k = (-1 * aptitud.to_i) - 1
 				array_cuentas[k] += 1
 			}
-			p "Array cuentas = #{array_cuentas}"
+			#p "Array cuentas = #{array_cuentas}"
 			my_min = lambda{|array|
 				min_ = array.max
 				array.each{|e|
@@ -236,12 +236,12 @@ class NReinas < Array
 				return min_
 			}
 			min_cuentas = my_min.call array_cuentas
-			p "min_cuentas = #{min_cuentas}"
+			#p "min_cuentas = #{min_cuentas}"
 			ind_1 = array_cuentas.index(min_cuentas)
-			p "ind_1 = #{ind_1}"
+			#p "ind_1 = #{ind_1}"
 			#ind_2 = aptitudes[ind_1]
 			ind_2 = aptitudes.index((-1.0 * (ind_1 + 1)))
-			p "ind_2 = #{ind_2}, aptitudes[ind_2] = #{aptitudes[ind_2]}"
+			#p "ind_2 = #{ind_2}, aptitudes[ind_2] = #{aptitudes[ind_2]}"
 			cromosoma = self[ind_2].clone
 			cromosoma.diversidad = min_cuentas
 			p "El cromosoma #{cromosoma} con aptitud= #{cromosoma.aptitud} y diversidad = #{cromosoma.diversidad} es el mejor"
