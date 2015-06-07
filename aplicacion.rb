@@ -21,6 +21,8 @@ y solo queda verificar en diagonales.  Las funciones que debe tener el Cromosoma
 al menos:
 * Crear cromosomas con nun numero de genes dado y con los valores
   Para los genes al azar y sin repetirse
+* Mutar un cromosomaa por intercambio de genes
+* Cruzar uniformemente un par de cromosomas 
 =end
 class Cromosoma < Array
 
@@ -123,8 +125,6 @@ Las funciones que debe tener son, al menos:
 * Ejecutar (durante un número de generaciones dada; 
    y en cada generación se hace evaluación de los Cromosomas, 
    selección, mutación y reemplazo).
-* Mutar cromosomas por intercambio de genes
-* Cruzar uniformemente un cromosoma 
 * Evaluar cromosoma:Esta es la función más laboriosa, 
   donde deben pensar como detectar ataques de Reinas en las 
   diagonales. Esta función debe retornar el número de ataques 
