@@ -82,6 +82,7 @@ class Cromosoma < Array
 					next
 				end
 				m = 1.0 * (x2 - x1) / (y2 - y1)
+				p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
 				if m == -1.0 then
 					num_ataques += 1
 				end
@@ -117,7 +118,9 @@ Las funciones que debe tener son, al menos:
 class NReinas < Array
 
 	def inicializar_cromosomas(dimension_tablero = 8)
-		@num_cromosomas = self.length
+		#p "Inicializando #{dimension_tablero} cromosomas"
+		@num_cromosomas = dimension_tablero
+		p "Inicializando con num cromosomas = #{@num_cromosomas}"
 		i = 0
 		while i < @num_cromosomas do
 			array = (0...dimension_tablero).to_a
@@ -131,8 +134,10 @@ class NReinas < Array
 	#Funcion principal del algoritmo. 
 	#num_generaciones = iteraciones
 	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
+		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
 		if tipo_seleccion == 'torneo' then
 			1.upto(num_generaciones){|generacion|
+				p "============> Generacion : #{generacion}"
 				evaluar_cromosomas!
 				seleccionar_cromosomas! tipo_seleccion
 				}
@@ -173,24 +178,30 @@ class NReinas < Array
 	# 2 cromosomas por torneo. Al final se insertan
 	# los mutados a la población
 	def seleccionar_cromosomas!(tipo_seleccion)
+		p "Seleccionando cromosomas"
 		if tipo_seleccion == 'torneo'
 			k = 2
+			x = -1
+			y = -1
 			k.downto(1) { |n|
 				while true do
 					x = rand(0...@num_cromosomas)
 					y = rand(0...@num_cromosomas)
-					if x == y then
+					#p "x = #{x}, y= #{y}"
+					if x != y then
 						break
 					end
 				end
+				p "x = #{x}, y= #{y}"
 				crom_1 = self[x]
 				crom_2 = self[y]
+				p "crom_1 =#{crom_1}, crom_2=#{crom_2}"
 				if crom_1.aptitud > crom_2.aptitud then
 					self.delete_at(y)
-					self.push(mutar(self[x]))
+					self.push(mutar(crom_1))
 					else
 						self.delete_at(x)
-						self.push(mutar(self[y]))
+						self.push(mutar(crom_2))
 				end
 			  }
 		elsif tipo_seleccion == 'diversidad'
