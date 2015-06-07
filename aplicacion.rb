@@ -245,8 +245,11 @@ class NReinas < Array
 	end
 end
 
+#Clase principal de la aplicacion.
+#Realiza funciones de entrada de datos por consola
 class AG_NReinas
-
+	
+	#Constructor que instancia los parametros para el AG
 	def initialize
 		while true do
 			puts "¿Tamaño del tablero?"  
@@ -294,7 +297,8 @@ class AG_NReinas
 		end
 
 	end
-
+	
+	#Metodo que ejecuta el AG
 	def ejecutar_AG
 		nr = NReinas.new
 		nr.inicializar_cromosomas @tamaño
