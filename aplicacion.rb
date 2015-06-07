@@ -162,6 +162,7 @@ class NReinas < Array
 		mejor_apt, mejor_crom = encontrar_mejor_cromosoma
 		p "=====================RESULTADOS=========================="
 		p "El mejor cromosoma con aptitud= #{mejor_apt} es #{mejor_crom}"
+		p "El numero de evaluaciones fue de #{Cromosoma.num_evaluaciones}"
 	end
 	
 	#Método que retorna el mejor cromosoma y su aptitud
@@ -325,7 +326,7 @@ class AG_NReinas
 
 	end
 	
-	#Función que ejecuta el AG
+	#Método principal del  AG
 	def ejecutar_AG
 		nr = NReinas.new
 		nr.inicializar_cromosomas @tamaño
