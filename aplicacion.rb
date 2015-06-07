@@ -141,9 +141,24 @@ class NReinas < Array
 				evaluar_cromosomas!
 				seleccionar_cromosomas! tipo_seleccion
 				}
+			mejor_apt, mejor_crom = encontrar_mejor_cromosoma
+			p "El mejor cromosoma con aptitud= #{mejor_apt} es #{mejor_crom}"
 		elsif tipo_seleccion == 'diversidad' then
 			p "Falta implementar"
 		end
+	end
+	
+	#Funcion que retorna el mejor cromosoma y su aptitud
+	def encontrar_mejor_cromosoma
+		apt = self[0].aptitud
+		cro = self[0]
+		each{|cromosoma|
+			if cromosoma.aptitud >= apt then
+				cro = cromosoma
+				apt = cromosoma.aptitud
+			end
+		}
+		return apt, cro
 	end
 
 
