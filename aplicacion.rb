@@ -82,7 +82,7 @@ class Cromosoma < Array
 					next
 				end
 				m = 1.0 * (x2 - x1) / (y2 - y1)
-				p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
+				#p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
 				if m == -1.0 then
 					num_ataques += 1
 				end
@@ -180,6 +180,7 @@ class NReinas < Array
   			end
   		end
   		cromosoma_mutado[pos1], cromosoma_mutado[pos2] = cromosoma_mutado[pos2], cromosoma_mutado[pos1]
+  		p "Cromosoma mutado = #{cromosoma_mutado} "
   		cromosoma_mutado
   	end
 
@@ -207,16 +208,18 @@ class NReinas < Array
 						break
 					end
 				end
-				p "x = #{x}, y= #{y}"
+				#p "x = #{x}, y= #{y}"
 				crom_1 = self[x]
 				crom_2 = self[y]
-				p "crom_1 =#{crom_1}, crom_2=#{crom_2}"
+				p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
 				if crom_1.aptitud > crom_2.aptitud then
+					p "El cromosoma 1 gana"
 					self.delete_at(y)
 					self.push(mutar(crom_1))
-					else
-						self.delete_at(x)
-						self.push(mutar(crom_2))
+				else
+					p "El cromosoma 2 gana"
+					self.delete_at(x)
+					self.push(mutar(crom_2))
 				end
 			  }
 		elsif tipo_seleccion == 'diversidad'
@@ -242,7 +245,66 @@ class NReinas < Array
 	end
 end
 
-nr = NReinas.new
-nr.inicializar_cromosomas
-nr.ejecutar
+class AG_NReinas
 
+	def initialize
+		while true do
+			puts "¿Tamaño del tablero?"  
+			STDOUT.flush  
+			tamaño = gets.chomp  
+			if tamaño == '' then
+				@tamaño = 8
+				break
+			else
+				begin
+					@tamaño = tamaño.to_i
+					break
+				rescue
+					next
+				end
+			end
+		end
+		while true do
+			puts "¿Tipo de seleccion (torneo/diversidad)?"
+			tipo = gets.chomp
+			if tipo == '' || tipo == 'torneo'then
+				@tipo = 'torneo'
+				break
+			elsif tipo == 'diversidad' then
+				@tipo = 'diversidad'
+				break
+			else
+				next
+			end
+		end
+		while true do
+			puts "¿Numero de generaciones?"
+			num_generaciones = gets.chomp
+			if num_generaciones == '' then
+				@num_generaciones = 50
+				break
+			else
+				begin
+					@num_generaciones = num_generaciones.to_i
+					break
+				rescue
+					next
+				end
+			end
+		end
+
+	end
+
+	def ejecutar_AG
+		nr = NReinas.new
+		nr.inicializar_cromosomas @tamaño
+		nr.ejecutar @num_generaciones, @tipo
+	end
+	
+	
+end
+
+
+
+ag = AG_NReinas.new
+ag.ejecutar_AG
