@@ -10,6 +10,7 @@ require 'bundler/setup'
 
 
 =begin
+@author Cristhian Fuertes
 Crosomoma es un array de genes. o sea, hereda de Array. 
 Y los genes son números enteros. La posición en el Array indica la columna del tablero 
 y el contenido indica la fila donde se encuentra la Reina en esa columna. 
@@ -20,34 +21,35 @@ y solo queda verificar en diagonales.  Las funciones que debe tener el Cromosoma
 al menos:
 * Crear cromosomas con nun numero de genes dado y con los valores
   Para los genes al azar y sin repetirse
-* Mutar por intercambio de genes
-* Cruce uniforme 
+* Mutar un cromosomaa por intercambio de genes
+* Cruzar uniformemente un par de cromosomas 
 =end
 class Cromosoma < Array
 
 
-  #Variable de clase que cuenta la cantidad
-  # de veces que se llama a la función
-  #evaluar
-  @@num_evaluaciones = 0
+	#Variable de clase que cuenta la cantidad
+	#de veces que se llama a la función
+	#evaluar
+	@@num_evaluaciones = 0
+	
+	#Se define el atributo aptitude del cromosoma, al igual
+	#que los métodos de acceso
+	attr_accessor :aptitud, :diversidad, :num_genes
+	
+	#Da valores al azar a los genes y garantiza
+	#que no se repitan
+	def inicializar_genes
+		@num_genes = self.length
+		@aptitud = 0
+		@diversidad = 0
+		self.sort_by!{rand()}
+	end
 
-  #Se define el atributo aptitude del cromosoma, al igual
-  #que los métodos de acceso
-  attr_accessor :aptitud, :diversidad, :num_genes
-
-  #Da valores al azar a los genes y garantiza
-  #que no se repitan
-  def inicializar_genes()
-  	@num_genes = self.length
-  	@aptitud = 0
-  	@diversidad = 0
-  	self.sort_by!{rand()}
-  end
-
-	#Funcion de evaluacion del cromosoma
-	#Es necesario validar que reinas se estan
-	#Atancado usando la formula de la pendiete:
+	#Método de evaluacion del cromosoma
+	#es necesario validar que reinas se estan
+	#atancado usando la formula de la pendiete:
 	# m = (X2 - X1)/(Y2 - Y1)
+	#@note Este método altera el estado del objeto Cromosoma
 	def evaluar!
 		@@num_evaluaciones += 1
 		num_ataques = 0
@@ -69,82 +71,17 @@ class Cromosoma < Array
 		@aptitud = -1.0 * num_ataques
 	end
 
-	#Metodo getter para la variable de clase
+	#Método getter para la variable de clase
 	# del numero de evaluaciones
+	#@return num_evaluaciones [Integer] El numero de evaluaciones en los cromosomas
 	def self.num_evaluaciones
 		@@num_evaluaciones
 	end
-
-
-end
-
-=begin 
-NReinas hereda de array y almacena cromosomas.
-Las funciones que debe tener son, al menos:
-* Crear la población con un numero de cromosomas dado
-* Ejecutar (durante un número de generaciones dada; 
-   y en cada generación se hace evaluación de los Cromosomas, 
-   selección, mutación y reemplazo).
-* Evaluar cromosoma:Esta es la función más laboriosa, 
-  donde deben pensar como detectar ataques de Reinas en las 
-  diagonales. Esta función debe retornar el número de ataques 
-  con signo negativo, y a ello le llamamos "aptitud". 
-  Lo ideal es llegar a aptitud==0. Si hay ataques, 
-  la aptitud empeora (se vuelve más negativa).
-=end
-class NReinas < Array
-
-	#Funcion que inicializa los cromomosomas
-	def inicializar_cromosomas(dimension_tablero = 8)
-		@num_cromosomas = dimension_tablero
-		p "Inicializando con num cromosomas = #{@num_cromosomas}"
-		i = 0
-		while i < @num_cromosomas do
-			array = (0...dimension_tablero).to_a
-			cromosoma = Cromosoma.new array
-			cromosoma.inicializar_genes
-			self[i] = cromosoma
-			i += 1
-		end
-	end
-
-	#Funcion principal del algoritmo. 
-	#num_generaciones = iteraciones
-	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
-		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
-		1.upto(num_generaciones){|generacion|
-			p "============> Generacion : #{generacion}"
-			evaluar_cromosomas!
-			seleccionar_cromosomas! tipo_seleccion
-			}
-		mejor_apt, mejor_crom = encontrar_mejor_cromosoma
-		p "=====================RESULTADOS=========================="
-		p "El mejor cromosoma con aptitud= #{mejor_apt} es #{mejor_crom}"
-	end
 	
-	#Funcion que retorna el mejor cromosoma y su aptitud
-	def encontrar_mejor_cromosoma
-		apt = self[0].aptitud
-		cro = self[0]
-		each{|cromosoma|
-			if cromosoma.aptitud >= apt then
-				cro = cromosoma
-				apt = cromosoma.aptitud
-			end
-		}
-		return apt, cro
-	end
-
-	#Funcion que itera sobre los cromosomas e
-	#Invoca su funcion de evaluacion
-	def evaluar_cromosomas!
-		self.each_index { |i| 
-			self[i].evaluar!
-		 }
-	end
-
-	#Muta el cromosoma por intercambio de genes
-  	def mutar(cromosoma)
+	#Método que muta el cromosoma por intercambio de genes.
+	#@param cromosoma [Cromosoma] El objeto cromosoma a mutar
+	#@return cromosoma_mutado [Cromosoma] El cromosoma despues de ser mutado
+  	def self.mutar(cromosoma)
   		cromosoma_mutado = cromosoma.clone
   		pos1 = rand(0...cromosoma_mutado.num_genes)
   		pos2 = -1
@@ -160,7 +97,10 @@ class NReinas < Array
   	end
   	
   	#Funcion de cruce uniforme
-	def cruzar(cromosoma1, cromosoma2)
+  	#@param cromosoma1 [Cromosoma] El primer cromosoma padre
+  	#@param cromosoma2 [Cromosoma] El segundo cromosoma padre
+  	#@return nuevo_cromosoma [Cromosoma] El cromosoma hijo producto del cruce
+	def self.cruzar(cromosoma1, cromosoma2)
 		nuevo_cromosoma = Cromosoma.new cromosoma1.length
 		iteraciones = @num_genes - 1
 		iteraciones.downto(0){|i|
@@ -172,15 +112,90 @@ class NReinas < Array
   		end
   	}
   	nuevo_cromosoma
-  end
+	end
 
-	#Funcion que determina que cromosomas
-	#Pasaran a la siguiente generacion.
-	# Se hace seleccion por torneo escogiendo
+
+end
+
+=begin 
+@author Cristhian Fuertes
+NReinas hereda de Array y almacena cromosomas.
+Las funciones que debe tener son, al menos:
+* Crear la población con un numero de cromosomas dado
+* Ejecutar (durante un número de generaciones dada; 
+   y en cada generación se hace evaluación de los Cromosomas, 
+   selección, mutación y reemplazo).
+* Evaluar cromosoma:Esta es la función más laboriosa, 
+  donde deben pensar como detectar ataques de Reinas en las 
+  diagonales. Esta función debe retornar el número de ataques 
+  con signo negativo, y a ello le llamamos "aptitud". 
+  Lo ideal es llegar a aptitud==0. Si hay ataques, 
+  la aptitud empeora (se vuelve más negativa).
+=end
+class NReinas < Array
+
+	#Método que inicializa los cromomosomas
+	#@param dimension_tablero [Integer] la magnitud N
+	def inicializar_cromosomas(dimension_tablero = 8)
+		@num_cromosomas = dimension_tablero
+		p "Inicializando con num cromosomas = #{@num_cromosomas}"
+		i = 0
+		while i < @num_cromosomas do
+			array = (0...dimension_tablero).to_a
+			cromosoma = Cromosoma.new array
+			cromosoma.inicializar_genes
+			self[i] = cromosoma
+			i += 1
+		end
+	end
+
+	#Método que ejecuta el AG por generaciones. 
+	#@param num_generaciones [Integer] La cantidad de generaciones(iteraciones)
+	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
+	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
+		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
+		1.upto(num_generaciones){|generacion|
+			p "============> Generacion : #{generacion}"
+			evaluar_cromosomas!
+			seleccionar_cromosomas! tipo_seleccion
+			}
+		mejor_apt, mejor_crom = encontrar_mejor_cromosoma
+		p "=====================RESULTADOS=========================="
+		p "El mejor cromosoma con aptitud= #{mejor_apt} es #{mejor_crom}"
+	end
+	
+	#Método que retorna el mejor cromosoma y su aptitud
+	#@return [apt, crom] la aptitud del mejor cromosoma y el cromosoma
+	def encontrar_mejor_cromosoma
+		apt = self[0].aptitud
+		cro = self[0]
+		each{|cromosoma|
+			if cromosoma.aptitud >= apt then
+				cro = cromosoma
+				apt = cromosoma.aptitud
+			end
+		}
+		return apt, cro
+	end
+
+	#Método que itera sobre los cromosomas e
+	#invoca su funcion de evaluacion.
+	#@note Este método cambia el estado de los cromosomas
+	def evaluar_cromosomas!
+		self.each_index { |i| 
+			self[i].evaluar!
+		 }
+	end
+
+	#Método que determina que cromosomas
+	#pasaran a la siguiente generacion.Tiene dos modalidades:
+	# 1)Se hace seleccion por torneo escogiendo
 	#k = 2 de los cromosomas y se toman de a
 	# 2 cromosomas por torneo. Al final se insertan
 	# los mutados a la población.
-	#Tambien se puede seleccionar por mayor diversidad
+	#2)Se hace selección por diversidad. Es decir, se busca el
+	# cromosoma cuya aptitud tenga la ocurrencia mas baja.
+	#@param tipo_seleccion [String] Texto que representa el tipo de selección del AG
 	def seleccionar_cromosomas!(tipo_seleccion)
 		p "Seleccionando cromosomas"
 		if tipo_seleccion == 'torneo'
@@ -203,11 +218,11 @@ class NReinas < Array
 				if crom_1.aptitud > crom_2.aptitud then
 					p "El cromosoma 1 gana"
 					self.delete_at(y)
-					self.push(mutar(crom_1))
+					self.push(Cromosoma.mutar(crom_1))
 				else
 					p "El cromosoma 2 gana"
 					self.delete_at(x)
-					self.push(mutar(crom_2))
+					self.push(Cromosoma.mutar(crom_2))
 				end
 			  }
 		elsif tipo_seleccion == 'diversidad' then
@@ -215,18 +230,18 @@ class NReinas < Array
 			aptitudes.each_index { |i|
 				aptitudes[i] = self[i].aptitud  
 			}
-			p "Aptitudes = #{aptitudes}"
+			#p "Aptitudes = #{aptitudes}"
 			max = aptitudes.max.to_i
 			min = aptitudes.min.to_i
-			p "min #{min}"
-			p "max #{max}"
+			#p "min #{min}"
+			#p "max #{max}"
 			fix_num_max = (2**(0.size * 8 -2) -1)
 			array_cuentas = Array.new -1 * min, 0
 			aptitudes.each{|aptitud|
 				k = (-1 * aptitud.to_i) - 1
 				array_cuentas[k] += 1
 			}
-			p "Array cuentas = #{array_cuentas}"
+			#p "Array cuentas = #{array_cuentas}"
 			my_min = lambda{|array|
 				min_ = array.max
 				array.each{|e|
@@ -237,24 +252,28 @@ class NReinas < Array
 				return min_
 			}
 			min_cuentas = my_min.call array_cuentas
-			p "min_cuentas = #{min_cuentas}"
+			#p "min_cuentas = #{min_cuentas}"
 			ind_1 = array_cuentas.index(min_cuentas)
-			p "ind_1 = #{ind_1}"
+			#p "ind_1 = #{ind_1}"
 			#ind_2 = aptitudes[ind_1]
 			ind_2 = aptitudes.index((-1.0 * (ind_1 + 1)))
-			p "ind_2 = #{ind_2}, aptitudes[ind_2] = #{aptitudes[ind_2]}"
+			#p "ind_2 = #{ind_2}, aptitudes[ind_2] = #{aptitudes[ind_2]}"
 			cromosoma = self[ind_2].clone
 			cromosoma.diversidad = min_cuentas
 			p "El cromosoma #{cromosoma} con aptitud= #{cromosoma.aptitud} y diversidad = #{cromosoma.diversidad} es el mejor"
 			self.delete_at(ind_1)
-			self.push(mutar(cromosoma))
+			self.push(Cromosoma.mutar(cromosoma))
 			
 	    end
 	end
 end
 
-#Clase principal de la aplicacion.
-#Realiza funciones de entrada de datos por consola
+
+=begin
+@author Oscar Tigreros
+Clase principal de la aplicacion.
+Realiza funciones de entrada de datos por consola
+=end
 class AG_NReinas
 	
 	#Constructor que instancia los parametros para el AG
