@@ -36,7 +36,7 @@ class Cromosoma < Array
 	#que los métodos de acceso
 	attr_accessor :aptitud, :diversidad, :num_genes
 	
-	#Da valores al azar a los genes y garantiza
+	#Método que da valores al azar a los genes y garantiza
 	#que no se repitan
 	def inicializar_genes
 		@num_genes = self.length
@@ -50,25 +50,29 @@ class Cromosoma < Array
 	#atancado usando la formula de la pendiete:
 	# m = (X2 - X1)/(Y2 - Y1)
 	#@note Este método altera el estado del objeto Cromosoma
+	
+
 	def evaluar!
 		@@num_evaluaciones += 1
 		num_ataques = 0
-		for y2 in 0...@num_genes
-			x2 = self[y2]
-			for y1 in 0...@num_genes 
-				x1 = self[y1]
-				if y1 == y2 then
+		for x2 in 0...@num_genes
+			y2 = self[x2]
+			for x1 in 0...@num_genes 
+				y1 = self[x1]
+				if x1 == x2 then
 					next
 				end
-				m = 1.0 * (x2 - x1) / (y2 - y1)
+				m = 1.0 * (x1.to_f - x2.to_f) / (y1.to_f - y2.to_f)
 				#p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
-				if m == -1.0 then
+				if m == -1.0 || m == 1.0 then
 					num_ataques += 1
 				end
 			end
 
 		end
 		@aptitud = -1.0 * num_ataques
+		p "Evaluando #{self} Aptitud = #{@aptitud}"
+		
 	end
 
 	#Método getter para la variable de clase
@@ -125,8 +129,7 @@ Las funciones que debe tener son, al menos:
 * Ejecutar (durante un número de generaciones dada; 
    y en cada generación se hace evaluación de los Cromosomas, 
    selección, mutación y reemplazo).
-* Evaluar cromosoma:Esta es la función más laboriosa, 
-  donde deben pensar como detectar ataques de Reinas en las 
+* Evaluar cromosoma:detectar ataques de Reinas en las 
   diagonales. Esta función debe retornar el número de ataques 
   con signo negativo, y a ello le llamamos "aptitud". 
   Lo ideal es llegar a aptitud==0. Si hay ataques, 
@@ -147,6 +150,7 @@ class NReinas < Array
 			self[i] = cromosoma
 			i += 1
 		end
+		p "Cromosomas iniciales #{self}"
 	end
 
 	#Método que ejecuta el AG por generaciones. 
@@ -157,33 +161,37 @@ class NReinas < Array
 		1.upto(num_generaciones){|generacion|
 			p "============> Generacion : #{generacion}"
 			evaluar_cromosomas!
-			seleccionar_cromosomas! tipo_seleccion
+			if generacion < num_generaciones then
+				seleccionar_cromosomas! tipo_seleccion
+			end
 			}
-		mejor_apt, mejor_crom = encontrar_mejor_cromosoma
+		mejor_crom = encontrar_mejor_cromosoma
 		p "=====================RESULTADOS=========================="
-		p "El mejor cromosoma con aptitud= #{mejor_apt} es #{mejor_crom}"
+		p "El mejor cromosoma con aptitud= #{mejor_crom.aptitud} es #{mejor_crom}"
 		p "El numero de evaluaciones fue de #{Cromosoma.num_evaluaciones}"
 	end
 	
 	#Método que retorna el mejor cromosoma y su aptitud
-	#@return [apt, crom] la aptitud del mejor cromosoma y el cromosoma
+	#@return crom el mejor cromosoma
 	def encontrar_mejor_cromosoma
-		apt = self[0].aptitud
-		cro = self[0]
+		p "Encontrando mejor cromosoma"
+		crom = self[0].clone
+		p "crom inicialmente es #{crom}"
 		each{|cromosoma|
-			if cromosoma.aptitud >= apt then
-				cro = cromosoma
-				apt = cromosoma.aptitud
+			p "cromosoma que esta siendo iterado #{cromosoma}"
+			if cromosoma.aptitud >= crom.aptitud then
+				crom = cromosoma.clone
+				p "crom cambian a #{crom}"
 			end
 		}
-		return apt, cro
+		crom
 	end
 
 	#Método que itera sobre los cromosomas e
 	#invoca su funcion de evaluacion.
 	#@note Este método cambia el estado de los cromosomas
 	def evaluar_cromosomas!
-		self.each_index { |i| 
+		each_index { |i| 
 			self[i].evaluar!
 		 }
 	end
@@ -218,12 +226,12 @@ class NReinas < Array
 				p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
 				if crom_1.aptitud > crom_2.aptitud then
 					p "El cromosoma 1 gana"
-					self.delete_at(y)
-					self.push(Cromosoma.mutar(crom_1))
+					delete_at(y)
+					push(Cromosoma.mutar(crom_1))
 				else
 					p "El cromosoma 2 gana"
-					self.delete_at(x)
-					self.push(Cromosoma.mutar(crom_2))
+					delete_at(x)
+					push(Cromosoma.mutar(crom_2))
 				end
 			  }
 		elsif tipo_seleccion == 'diversidad' then
@@ -340,3 +348,8 @@ end
 
 ag = AG_NReinas.new
 ag.ejecutar_AG
+
+#c = Cromosoma.new [3, 1, 0, 2]
+#c.num_genes = 4
+#c.evaluar!
+#p c.aptitud
