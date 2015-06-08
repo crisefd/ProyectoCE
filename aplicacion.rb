@@ -106,7 +106,7 @@ class Cromosoma < Array
   	#@return nuevo_cromosoma [Cromosoma] El cromosoma hijo producto del cruce
 	def self.cruzar(cromosoma1, cromosoma2)
 		nuevo_cromosoma = Cromosoma.new cromosoma1.length
-		iteraciones = @num_genes - 1
+		iteraciones = cromosoma1.num_genes - 1
 		iteraciones.downto(0){|i|
   		bit = rand(0..1)
   		if bit == 0 then
@@ -348,8 +348,3 @@ end
 
 ag = AG_NReinas.new
 ag.ejecutar_AG
-
-#c = Cromosoma.new [3, 1, 0, 2]
-#c.num_genes = 4
-#c.evaluar!
-#p c.aptitud
