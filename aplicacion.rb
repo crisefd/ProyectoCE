@@ -6,6 +6,7 @@
 # Creation date: 2015-05-19 21:20
 require 'rubygems'
 require 'bundler/setup'
+require 'date'
 
 
 
@@ -62,9 +63,10 @@ class Cromosoma < Array
 				if x1 == x2 then
 					next
 				end
-				m = 1.0 * (x1.to_f - x2.to_f) / (y1.to_f - y2.to_f)
+				m = 1.0 * (x1 - x2) / (y1 - y2)
 				#p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
 				if m == -1.0 || m == 1.0 then
+					#p "Ataque x1=#{x1}, x2= #{x2}, y1=#{y1}, y2=#{y2}"
 					num_ataques += 1
 				end
 			end
@@ -150,6 +152,7 @@ class NReinas < Array
 			self[i] = cromosoma
 			i += 1
 		end
+		@mejor_cromosoma = nil
 		p "Cromosomas iniciales #{self}"
 	end
 
@@ -158,42 +161,51 @@ class NReinas < Array
 	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
 	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
 		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
+		total_generaciones = 0
 		1.upto(num_generaciones){|generacion|
 			p "============> Generacion : #{generacion}"
-			evaluar_cromosomas!
-			if generacion < num_generaciones then
-				seleccionar_cromosomas! tipo_seleccion
+			total_generaciones = generacion
+			res = evaluar_cromosomas!
+			if res == 'detener' then
+				break
+			elsif res == 'continuar' then
+				if generacion < num_generaciones then
+					seleccionar_cromosomas! tipo_seleccion
+				end
 			end
+			
 			}
-		mejor_crom = encontrar_mejor_cromosoma
-		p "=====================RESULTADOS=========================="
-		p "El mejor cromosoma con aptitud= #{mejor_crom.aptitud} es #{mejor_crom}"
-		p "El numero de evaluaciones fue de #{Cromosoma.num_evaluaciones}"
-	end
-	
-	#Método que retorna el mejor cromosoma y su aptitud
-	#@return crom el mejor cromosoma
-	def encontrar_mejor_cromosoma
-		p "Encontrando mejor cromosoma"
-		crom = self[0].clone
-		p "crom inicialmente es #{crom}"
-		each{|cromosoma|
-			p "cromosoma que esta siendo iterado #{cromosoma}"
-			if cromosoma.aptitud >= crom.aptitud then
-				crom = cromosoma.clone
-				p "crom cambian a #{crom}"
-			end
-		}
-		crom
+		#mejor_crom = encontrar_mejor_cromosoma
+		salida = "=======================ENTRADAS===========================\n"
+		salida += "La dimension del tablero fue #{@num_cromosomas}\n"
+		salida += "El maximo de generaciones fue #{num_generaciones}\n"
+		salida += "El tipo de selección fue #{tipo_seleccion}\n"
+		salida += "=====================RESULTADOS==========================\n"
+		salida += "Recuerde que una posición en la lista representa un columna en el tablero.\n Y el valor en cada posición representa una fila\n\n"
+		salida += "El mejor cromosoma con aptitud= #{@mejor_cromosoma.aptitud} fue #{@mejor_cromosoma}\n"
+		salida += "El numero de evaluaciones fue  #{Cromosoma.num_evaluaciones}\n"
+		salida += "El total de generaciones fue  #{total_generaciones}"
+		salida
 	end
 
 	#Método que itera sobre los cromosomas e
 	#invoca su funcion de evaluacion.
 	#@note Este método cambia el estado de los cromosomas
 	def evaluar_cromosomas!
+		respuesta = 'continuar'
 		each_index { |i| 
 			self[i].evaluar!
+			if Cromosoma.num_evaluaciones == 1 then
+				@mejor_cromosoma = self[0].clone
+			elsif self[i].aptitud == 0 then
+				@mejor_cromosoma = self[i].clone
+				respuesta = 'detener'
+				break
+			elsif self[i].aptitud >= @mejor_cromosoma.aptitud then
+				@mejor_cromosoma = self[i].clone
+			end
 		 }
+		 respuesta
 	end
 
 	#Método que determina que cromosomas
@@ -338,7 +350,10 @@ class AG_NReinas
 	def ejecutar_AG
 		nr = NReinas.new
 		nr.inicializar_cromosomas @tamaño
-		nr.ejecutar @num_generaciones, @tipo
+		txt_salida = nr.ejecutar @num_generaciones, @tipo
+		archivo_salida = open(DateTime.now.to_s, 'w')
+		archivo_salida.write(txt_salida)
+		archivo_salida.close
 	end
 	
 	
