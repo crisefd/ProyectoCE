@@ -65,7 +65,7 @@ class Cromosoma < Array
 					next
 				end
 				m = 1.0 * (x1 - x2) / (y1 - y2)
-				p "verificador ataques: #{verificador_ataques}"
+				#p "verificador ataques: #{verificador_ataques}"
 				#p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
 				if m == -1.0 || m == 1.0 then
 					if verificador_ataques[x1] == 0 || verificador_ataques[x2] == 0 then
@@ -78,7 +78,7 @@ class Cromosoma < Array
 
 		end
 		@aptitud = -1.0 * num_ataques
-		p "Evaluando #{self} Aptitud = #{@aptitud}"
+		#p "Evaluando #{self} Aptitud = #{@aptitud}"
 		
 	end
 
