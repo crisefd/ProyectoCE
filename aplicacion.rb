@@ -70,7 +70,7 @@ class Cromosoma < Array
 			end
 
 		end
-		@aptitud = -1.0 * num_ataques
+		@aptitud = -0.5 * num_ataques
 		p "Evaluando #{self} Aptitud = #{@aptitud}"
 		
 	end
