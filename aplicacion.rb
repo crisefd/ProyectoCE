@@ -62,15 +62,16 @@ class Cromosoma < Array
 				if x1 == x2 then
 					next
 				end
-				m = 1.0 * (x1.to_f - x2.to_f) / (y1.to_f - y2.to_f)
+				m = 1.0 * (x1 - x2) / (y1 - y2)
 				#p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
 				if m == -1.0 || m == 1.0 then
+					p "Ataque x1=#{x1}, x2= #{x2}, y1=#{y1}, y2=#{y2}"
 					num_ataques += 1
 				end
 			end
 
 		end
-		@aptitud = -1.0 * num_ataques
+		@aptitud = -0.5 * num_ataques
 		p "Evaluando #{self} Aptitud = #{@aptitud}"
 		
 	end
@@ -346,5 +347,10 @@ end
 
 
 
-ag = AG_NReinas.new
-ag.ejecutar_AG
+#ag = AG_NReinas.new
+#ag.ejecutar_AG
+
+c = Cromosoma.new [3, 2, 0, 1]
+c.num_genes = 4
+c.evaluar!
+p "apt: #{c.aptitud}"
