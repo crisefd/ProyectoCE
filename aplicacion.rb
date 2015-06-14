@@ -289,7 +289,67 @@ class NReinas < Array
 			p "El cromosoma #{cromosoma} con aptitud= #{cromosoma.aptitud} y diversidad = #{cromosoma.diversidad} es el mejor"
 			self.delete_at(ind_1)
 			self.push(Cromosoma.mutar(cromosoma))
+		elsif tipo_seleccion == "mixto" then
+			aptitudes = Array.new(@num_cromosomas)
+			aptitudes.each_index { |i|
+				aptitudes[i] = self[i].aptitud  
+			}
+			max = aptitudes.max.to_i
+			min = aptitudes.min.to_i
+			array_cuentas = Array.new -1 * min, 0
+			aptitudes.each{|aptitud|
+				k = (-1 * aptitud.to_i) - 1
+				array_cuentas[k] += 1
+			}
+			each_index{|i|
+				k = (-1 * aptitudes[i].to_i) - 1
+				self[i].diversidad = array_cuentas[k]
+			}
 			
+			cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
+			p "Cromosomas ordenado #{cromosomas_ordenados}"
+			k = 2
+			x = -1
+			y = -1
+			k.downto(1) { |n|
+				while true do
+					x = rand(0...@num_cromosomas)
+					p "x = #{x}"
+					if x == 0 then
+						y = 1
+						#p "y= 1"
+						break
+					elsif x == @num_cromosomas -1 then
+						y = @num_cromosomas - 2
+						#p "y = #{y}"
+						break
+					else
+						dec = rand(0..1)
+						if dec == 0 then
+							y = x - 1
+							#p "y = #{y}"
+							break
+						elsif dec == 1 then
+							y = x + 1
+							#p "y = #{y}"
+							break
+						end
+					end
+				end
+				#p "x = #{x}, y= #{y}"
+				crom_1 = cromosomas_ordenados[x]
+				crom_2 = cromosomas_ordenados[y]
+				p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
+				if crom_1.aptitud > crom_2.aptitud then
+					p "El cromosoma 1 gana"
+					delete_at(y)
+					push(Cromosoma.mutar(crom_1))
+				else
+					p "El cromosoma 2 gana"
+					delete_at(x)
+					push(Cromosoma.mutar(crom_2))
+				end
+			  }
 	    end
 	end
 end
@@ -321,13 +381,16 @@ class AG_NReinas
 			end
 		end
 		while true do
-			puts "¿Tipo de seleccion (torneo/diversidad)?"
+			puts "¿Tipo de seleccion (torneo/diversidad/mixto)?"
 			tipo = gets.chomp
-			if tipo == '' || tipo == 'torneo'then
+			if tipo == '' || tipo == 'torneo' || tipo == 't'then
 				@tipo = 'torneo'
 				break
-			elsif tipo == 'diversidad' then
+			elsif tipo == 'diversidad' || tipo == 'd' then
 				@tipo = 'diversidad'
+				break
+			elsif tipo == 'mixto' || tipo == 'm' then
+				@tipo = 'mixto'
 				break
 			else
 				next
