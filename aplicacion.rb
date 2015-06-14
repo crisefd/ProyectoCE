@@ -261,7 +261,6 @@ class NReinas < Array
 			min = aptitudes.min.to_i
 			#p "min #{min}"
 			#p "max #{max}"
-			fix_num_max = (2**(0.size * 8 -2) -1)
 			array_cuentas = Array.new -1 * min, 0
 			aptitudes.each{|aptitud|
 				k = (-1 * aptitud.to_i) - 1
@@ -350,6 +349,57 @@ class NReinas < Array
 					push(Cromosoma.mutar(crom_2))
 				end
 			  }
+			elsif tipo_seleccion == 'elitista' then
+				aptitudes = Array.new(@num_cromosomas)
+			aptitudes.each_index { |i|
+				aptitudes[i] = self[i].aptitud  
+			}
+			max = aptitudes.max.to_i
+			min = aptitudes.min.to_i
+			array_cuentas = Array.new -1 * min, 0
+			aptitudes.each{|aptitud|
+				k = (-1 * aptitud.to_i) - 1
+				array_cuentas[k] += 1
+			}
+			each_index{|i|
+				k = (-1 * aptitudes[i].to_i) - 1
+				self[i].diversidad = array_cuentas[k]
+			}
+			
+			cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
+			#p "Cromosomas ordenado #{cromosomas_ordenados}"
+			p = (0.1 * @num_cromosomas).to_i
+			banderas_crom_elitistas = Array.new @num_cromosomas, 0
+			for i in 0..p
+				banderas_crom_elitistas[i] = 1
+			end
+			
+			k = 2
+			x = -1
+			y = -1
+			k.downto(1) { |n|
+				while true do
+					x = rand(0...@num_cromosomas)
+					y = rand(0...@num_cromosomas)
+					#p "x = #{x}, y= #{y}"
+					if x != y && banderas_crom_elitistas[x] == 0 && banderas_crom_elitistas[y] == 0 then
+						break
+					end
+				end
+				#p "x = #{x}, y= #{y}"
+				crom_1 = self[x]
+				crom_2 = self[y]
+				p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
+				if crom_1.aptitud > crom_2.aptitud then
+					p "El cromosoma 1 gana"
+					delete_at(y)
+					push(Cromosoma.mutar(crom_1))
+				else
+					p "El cromosoma 2 gana"
+					delete_at(x)
+					push(Cromosoma.mutar(crom_2))
+				end
+			}
 	    end
 	end
 end
@@ -381,7 +431,7 @@ class AG_NReinas
 			end
 		end
 		while true do
-			puts "¿Tipo de seleccion (torneo/diversidad/mixto)?"
+			puts "¿Tipo de seleccion (torneo/diversidad/mixto/elitista)?"
 			tipo = gets.chomp
 			if tipo == '' || tipo == 'torneo' || tipo == 't'then
 				@tipo = 'torneo'
@@ -392,6 +442,9 @@ class AG_NReinas
 			elsif tipo == 'mixto' || tipo == 'm' then
 				@tipo = 'mixto'
 				break
+			elsif tipo == 'elitista' || tipo == 'e' then
+					@tipo = 'elitista'
+					break
 			else
 				next
 			end
