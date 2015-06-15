@@ -3,8 +3,8 @@
 # Archivo: VerificarCuentaBancaria.feature
 # Autor: Fabian Andres Cano
 # Email:  fabian.cano@correounivalle.edu.co
-# Fecha creación: 2015-06-06
-# Fecha última modificación: 2015-06-06
+# Fecha creación: 2015-06-15
+# Fecha última modificación: 2015-06-15
 # Versión: 0.2
 # Licencia: GPL
 
