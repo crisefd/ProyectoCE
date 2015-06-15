@@ -48,6 +48,12 @@ class Cromosoma < Array
 		@diversidad = 0
 		self.sort_by!{rand()}
 	end
+	
+	def inicializar_genes2
+		@num_genes = self.length
+		@aptitud = 0
+		@diversidad = 0
+	end
 
 	#Método de evaluacion del cromosoma
 	#es necesario validar que reinas se estan
