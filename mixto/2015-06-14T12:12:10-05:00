@@ -1,0 +1,11 @@
+=======================ENTRADAS===========================
+La dimension del tablero fue 13
+El maximo de generaciones fue 1000
+El tipo de selección fue mixto
+=====================RESULTADOS==========================
+Recuerde que una posición en la lista representa un columna en el tablero.
+ Y el valor en cada posición representa una fila
+
+El mejor cromosoma con aptitud= -1.0 fue [5, 3, 11, 6, 10, 12, 0, 4, 7, 9, 2, 1, 8]
+El numero de evaluaciones fue  13000
+El total de generaciones fue  1000
