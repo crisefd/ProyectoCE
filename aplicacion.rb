@@ -34,7 +34,10 @@ class Cromosoma < Array
 	@@num_evaluaciones = 0
 	
 	#Se define el atributo aptitude del cromosoma, al igual
-	#que los métodos de acceso
+	#que los métodos de acceso.
+	#
+	#@attribute aptitud [Float] valor <= 0 que mide la aptitud del cromosoma definido como el inverso aditivo del #ataques
+	#@attribute diversidad [Integer] valor >= 0 que mide la aptitud del cromosoma definido
 	attr_accessor :aptitud, :diversidad, :num_genes
 	
 	#Método que da valores al azar a los genes y garantiza
@@ -50,9 +53,8 @@ class Cromosoma < Array
 	#es necesario validar que reinas se estan
 	#atancado usando la formula de la pendiete:
 	# m = (X2 - X1)/(Y2 - Y1)
+	#
 	#@note Este método altera el estado del objeto Cromosoma
-	
-
 	def evaluar!
 		@@num_evaluaciones += 1
 		num_ataques = 0
@@ -65,12 +67,9 @@ class Cromosoma < Array
 					next
 				end
 				m = 1.0 * (x1 - x2) / (y1 - y2)
-				#p "verificador ataques: #{verificador_ataques}"
-				#p "Resultado de evaluacion para cromosoma #{self} es m =#{m}"
 				if m == -1.0 || m == 1.0 then
 					if verificador_ataques[x1] == 0 || verificador_ataques[x2] == 0 then
 						verificador_ataques[x1], verificador_ataques[x2] = 1, 1
-						#p "Ataque x1=#{x1}, x2= #{x2}, y1=#{y1}, y2=#{y2}"
 						num_ataques += 1
 					end
 				end
@@ -78,18 +77,17 @@ class Cromosoma < Array
 
 		end
 		@aptitud = -1.0 * num_ataques
-		#p "Evaluando #{self} Aptitud = #{@aptitud}"
-		
 	end
 
-	#Método getter para la variable de clase
-	# del numero de evaluaciones
+	#Método de clase que cumple la función de getter para la variable de clase del mismo nombre
+	#
 	#@return num_evaluaciones [Integer] El numero de evaluaciones en los cromosomas
 	def self.num_evaluaciones
 		@@num_evaluaciones
 	end
 	
-	#Método que muta el cromosoma por intercambio de genes.
+	#Método de clase que muta el cromosoma por intercambio de genes.
+	#
 	#@param cromosoma [Cromosoma] El objeto cromosoma a mutar
 	#@return cromosoma_mutado [Cromosoma] El cromosoma despues de ser mutado
   	def self.mutar(cromosoma)
@@ -107,7 +105,7 @@ class Cromosoma < Array
   		cromosoma_mutado
   	end
   	
-  	#Funcion de cruce uniforme
+  	#Método que realiza cruce uniforme a partir de dos cromosomas
   	#@param cromosoma1 [Cromosoma] El primer cromosoma padre
   	#@param cromosoma2 [Cromosoma] El segundo cromosoma padre
   	#@return nuevo_cromosoma [Cromosoma] El cromosoma hijo producto del cruce
@@ -145,7 +143,7 @@ Las funciones que debe tener son, al menos:
 class NReinas < Array
 
 	#Método que inicializa los cromomosomas
-	#@param dimension_tablero [Integer] la magnitud N
+	#@param dimension_tablero [Integer] la magnitud N = #reinas
 	def inicializar_cromosomas(dimension_tablero = 8)
 		@num_cromosomas = dimension_tablero
 		p "Inicializando con num cromosomas = #{@num_cromosomas}"
@@ -158,12 +156,13 @@ class NReinas < Array
 			i += 1
 		end
 		@mejor_cromosoma = nil
-		p "Cromosomas iniciales #{self}"
+		#p "Cromosomas iniciales #{self}"
 	end
 
 	#Método que ejecuta el AG por generaciones. 
 	#@param num_generaciones [Integer] La cantidad de generaciones(iteraciones)
 	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
+	#@return salida [String] Texto que contiene la información sobre la ejecución del AG
 	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
 		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
 		total_generaciones = 0
@@ -180,7 +179,6 @@ class NReinas < Array
 			end
 			
 			}
-		#mejor_crom = encontrar_mejor_cromosoma
 		salida = "=======================ENTRADAS===========================\n"
 		salida += "La dimension del tablero fue #{@num_cromosomas}\n"
 		salida += "El maximo de generaciones fue #{num_generaciones}\n"
@@ -214,13 +212,18 @@ class NReinas < Array
 	end
 
 	#Método que determina que cromosomas
-	#pasaran a la siguiente generacion.Tiene dos modalidades:
+	#pasaran a la siguiente generacion.Tiene cuatro modalidades:
 	# 1)Se hace seleccion por torneo escogiendo
 	#k = 2 de los cromosomas y se toman de a
 	# 2 cromosomas por torneo. Al final se insertan
 	# los mutados a la población.
-	#2)Se hace selección por diversidad. Es decir, se busca el
+	#2)Se hace selección por diversidad. Es decir, se busca 
 	# cromosoma cuya aptitud tenga la ocurrencia mas baja.
+	#3) Esta una estrategia mixta de 1) y 2). Se ordena los cromosomas en función de su diversidad
+	# y se aplica torneo a dos elementos contiguos (el torneo se gana con aptitud) 
+	#4) Tambien es una estrategia mixta entre 1) y 2). Se ordena los cromosomas en función de su diversidad,
+	# pero esta vez se aplica elitismo. Se mantienen el 10% de los cromosomas del top y se aplica torneo(con la aptitud)
+	# al 90% restante
 	#@param tipo_seleccion [String] Texto que representa el tipo de selección del AG
 	def seleccionar_cromosomas!(tipo_seleccion)
 		p "Seleccionando cromosomas"
@@ -409,6 +412,7 @@ end
 @author Oscar Tigreros
 Clase principal de la aplicacion.
 Realiza funciones de entrada de datos por consola
+y escritura de los resultados en archivos de texto plano
 =end
 class AG_NReinas
 	
