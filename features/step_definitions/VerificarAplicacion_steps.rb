@@ -2,8 +2,8 @@
 # Archivo: VerificarAplicacion_steps.rb
 # Autor: Fabian Andres Cano
 # Email:  fabian.cano@correounivalle.edu.co
-# Fecha creación: 2015-06-06
-# Fecha última modificación: 2015-06-06
+# Fecha creación: 2015-06-15
+# Fecha última modificación: 2015-06-15
 # Versión: 0.3
 # Licencia: GPL
 
@@ -15,8 +15,13 @@ end
 
 
 Cuando /^miro dos genes del cromosoma$/ do
-  @gen1 = @cromosoma[4]
-  @gen2 = @cromosoma[8]
+  posicion1=rand(10)
+  posicion2=rand(10)
+  while(posicion1==posicion2) do
+      posicion2=rand(10)
+  end
+  @gen1 = @cromosoma[posicion1]
+  @gen2 = @cromosoma[posicion2]
 end
 
 
