@@ -1,0 +1,31 @@
+# encoding: utf-8
+# Archivo: VerificarCuentaBancaria_steps.rb
+# Autor: Fabian Andres Cano
+# Email:  fabian.cano@correounivalle.edu.co
+# Fecha creación: 2015-06-06
+# Fecha última modificación: 2015-06-06
+# Versión: 0.3
+# Licencia: GPL
+
+Dado /^que se necesita un cromosoma este se crea$/ do
+  array = (0...10).to_a
+  @cromosoma = Cromosoma.new array
+  @cromosoma.inicializar_genes
+end
+
+
+Cuando /^miro dos genes del cromosoma$/ do
+  @gen1 = @cromosoma[4]
+  @gen2 = @cromosoma[8]
+end
+
+
+Entonces /^debe decir que no son iguales$/ do
+ @iguales=false
+ if @gen1==@gen2 then
+    @iguales=true
+ expect(@iguales).to be false
+ end
+end
+
+

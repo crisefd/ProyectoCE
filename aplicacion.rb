@@ -49,6 +49,7 @@ class Cromosoma < Array
 		self.sort_by!{rand()}
 	end
 	
+	#Método inicializar_genes2
 	def inicializar_genes2
 		@num_genes = self.length
 		@aptitud = 0

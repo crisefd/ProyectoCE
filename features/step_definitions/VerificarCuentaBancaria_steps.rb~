@@ -1,0 +1,47 @@
+# encoding: utf-8
+# Archivo: VerificarCuentaBancaria_steps.rb
+# Autor: Ángel García Baños
+# Email:  angarciaba@gmail.com
+# Fecha creación: 2015-03-18
+# Fecha última modificación: 2015-03-24
+# Versión: 0.2
+# Licencia: GPL
+
+Dado /^que (.+?) necesita una cuenta bancaria para guardar (.+?) pesos que ella tiene, se le crea una cuenta$/  do |nombre, dineroInicial|
+  @cuentaBancaria = CuentaBancaria.new(nombre, dineroInicial.to_i)
+end
+
+
+Cuando /^miro cuanta plata hay$/ do
+  @plataQueHay = @cuentaBancaria.cuandoDineroHay
+end
+
+
+Entonces /^debe decir que hay (.+?) pesos$/ do |cuantosPesos|
+  expect(@plataQueHay).to eq cuantosPesos.to_i
+end
+
+
+Cuando /^introduzco (.+?) pesos$/ do |cuantosPesos|
+  @cuentaBancaria.ingresarDinero(cuantosPesos.to_i)
+end
+
+
+Cuando /^saco (.+?) pesos$/ do |cuantosPesos|
+  cuantosPesos = cuantosPesos.to_i
+#  @noSePuede = false
+  if cuantosPesos <= @cuentaBancaria.cuandoDineroHay then
+    expect { @cuentaBancaria.sacarDinero(cuantosPesos) }.not_to raise_error
+  else
+    expect { @cuentaBancaria.sacarDinero(cuantosPesos) }.to raise_error
+    @noSePuede = true
+  end
+end
+
+
+Entonces /^debe decir que no se puede$/ do
+  expect(@noSePuede).to be true
+end
+
+
+
