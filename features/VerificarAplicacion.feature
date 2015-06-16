@@ -10,19 +10,17 @@
 
 Característica: Ejecutar correctamente el algoritmo genetico del problema de n reinas con las caracteristicas enseñadas en el curso Computacion Evolutiva
 
-  Antecedentes: Crear un cromosoma
-    Dado que se necesita un cromosoma este se crea
 
   Escenario: Verificar que un cromosoma tenga sus genes distintos
-    Cuando miro dos genes del cromosoma
-    Entonces debe decir que no son iguales
+    Cuando creo un cromosoma de tamano 10
+    Entonces debe decir que todos sus genes son distintos y son valores entre 0 y N-1
 
   Escenario: Verificar que funcione la mutacion de un cromosoma
-    Cuando miro un cromosoma y su respectiva mutacion
+    Cuando creo un cromosoma y su respectiva mutacion de tamano 10 
     Entonces debe decir que estos cromosomas son distintos
 
   Escenario: Verificar que funcione el cruce uniforme
-    Cuando miro dos cromosomas y su cromosoma hijo
+    Cuando creo dos cromosomas y su cromosoma hijo de tamano 10 
     Entonces debe decir que cada gen del cromosoma hijo hace parte del cromosoma padre o madre
 
   Escenario: Verificar que se evaluen correctamente los ataques entre reinas
