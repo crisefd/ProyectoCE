@@ -7,33 +7,39 @@
 # Versión: 0.3
 # Licencia: GPL
 
-Dado /^que se necesita un cromosoma este se crea$/ do
-  array = (0...10).to_a
+
+Cuando /^creo un cromosoma de tamano (.+?)$/ do |tamano|
+  tamanoCromosoma=tamano.to_i
+  array = (0...tamanoCromosoma).to_a
   @cromosoma = Cromosoma.new array
   @cromosoma.inicializar_genes
 end
 
 
-Cuando /^miro dos genes del cromosoma$/ do
-  posicion1=rand(10)
-  posicion2=rand(10)
-  while(posicion1==posicion2) do
-      posicion2=rand(10)
-  end
-  @gen1 = @cromosoma[posicion1]
-  @gen2 = @cromosoma[posicion2]
-end
-
-
-Entonces /^debe decir que no son iguales$/ do
+Entonces /^debe decir que todos sus genes son distintos y son valores entre 0 y N-1$/ do
  @iguales=false
- if @gen1==@gen2 then
-    @iguales=true
- expect(@iguales).to be false
+ contador=0
+ contadorInterno=1
+ while contador<@cromosoma.size do
+   while contadorInterno<@cromosoma.size do
+      if @cromosoma[contador]==@cromosoma[contadorInterno] or @cromosoma[contador]>@cromosoma.size then
+         @iguales=true
+         contador=@cromosoma.size
+         contadorInterno=@cromosoma.size
+      end
+      contadorInterno=contadorInterno+1
+   end
+ contador=contador+1
+ contadorInterno=contador+1
  end
+ expect(@iguales).to be false
 end
 
-Cuando /^miro un cromosoma y su respectiva mutacion$/ do
+Cuando /^creo un cromosoma y su respectiva mutacion de tamano (.+?)$/ do |tamano|
+  tamanoCromosoma=tamano.to_i
+  array = (0...tamanoCromosoma).to_a
+  @cromosoma = Cromosoma.new array
+  @cromosoma.inicializar_genes
   @mutacion=Cromosoma.mutar(@cromosoma)
 end
 
@@ -50,8 +56,9 @@ Entonces /^debe decir que estos cromosomas son distintos$/ do
   end
  expect(@distintos).to be true
  end
- Cuando /^miro dos cromosomas y su cromosoma hijo$/ do
-  array = (0...10).to_a
+ Cuando /^creo dos cromosomas y su cromosoma hijo de tamano (.+?)$/ do |tamano|
+  tamanoCromosoma=tamano.to_i
+  array = (0...tamanoCromosoma).to_a
   @cromosoma1 = Cromosoma.new array
   @cromosoma1.inicializar_genes
   @cromosoma2 = Cromosoma.new array
@@ -64,7 +71,7 @@ end
 Entonces /^debe decir que cada gen del cromosoma hijo hace parte del cromosoma padre o madre$/ do
   @contador=0
   @iguales=true
-  while @contador<10 do
+  while @contador<@cromosoma1.size do
   	if @cromosoma1[@contador] != @cromosomaHijo[@contador]  and @cromosoma2[@contador] != @cromosomaHijo[@contador] then
            @iguales=false
   	   break
@@ -103,4 +110,3 @@ Entonces /^al evaluarlo debe dar (.+?) conflicto$/ do |conflictosEsperados|
  @conflictos=-1*@cromosomaNuevo.evaluar!
  expect(@conflictos.to_i).to eq conflictosEsperados.to_i
  end
-
