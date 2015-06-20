@@ -33,8 +33,8 @@ class Cromosoma < Array
 	#evaluar
 	@@num_evaluaciones = 0
 	
-	#Se define el atributo aptitude del cromosoma, al igual
-	#que los métodos de acceso.
+	#Se definen los atributos del cromosoma, al igual
+	#que los métodos de acceso para ellos.
 	#
 	#@attribute aptitud [Float] valor <= 0 que mide la aptitud del cromosoma definido como el inverso aditivo del #ataques
 	#@attribute diversidad [Integer] valor >= 0 que mide la aptitud del cromosoma definido como la ocurrencia de una aptitud
