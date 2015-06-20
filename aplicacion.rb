@@ -37,7 +37,7 @@ class Cromosoma < Array
 	#que los métodos de acceso.
 	#
 	#@attribute aptitud [Float] valor <= 0 que mide la aptitud del cromosoma definido como el inverso aditivo del #ataques
-	#@attribute diversidad [Integer] valor >= 0 que mide la aptitud del cromosoma definido
+	#@attribute diversidad [Integer] valor >= 0 que mide la aptitud del cromosoma definido como la ocurrencia de una aptitud
 	attr_accessor :aptitud, :diversidad, :num_genes
 	
 	#Método que da valores al azar a los genes y garantiza
@@ -56,8 +56,8 @@ class Cromosoma < Array
 		@diversidad = 0
 	end
 
-	#Método de evaluacion del cromosoma
-	#es necesario validar que reinas se estan
+	#Método de evaluacion del cromosoma.
+	#Es necesario validar que reinas se estan
 	#atancado usando la formula de la pendiete:
 	# m = (X2 - X1)/(Y2 - Y1)
 	#
@@ -96,7 +96,7 @@ class Cromosoma < Array
 	#Método de clase que muta el cromosoma por intercambio de genes.
 	#
 	#@param cromosoma [Cromosoma] El objeto cromosoma a mutar
-	#@return cromosoma_mutado [Cromosoma] El cromosoma despues de ser mutado
+	#@return cromosoma_mutado [Cromosoma] El objeto cromosoma despues de ser mutado
   	def self.mutar(cromosoma)
   		cromosoma_mutado = cromosoma.clone
   		pos1 = rand(0...cromosoma_mutado.num_genes)
@@ -200,6 +200,7 @@ class NReinas < Array
 
 	#Método que itera sobre los cromosomas e
 	#invoca su funcion de evaluacion.
+	#@return respuesta [String] una cadena que indica si se a alcanzado la mejor aptitud posible (= 0)
 	#@note Este método cambia el estado de los cromosomas
 	def evaluar_cromosomas!
 		respuesta = 'continuar'
@@ -219,18 +220,22 @@ class NReinas < Array
 	end
 
 	#Método que determina que cromosomas
-	#pasaran a la siguiente generacion.Tiene cuatro modalidades:
+	#pasaran a la siguiente generación.Tiene cuatro modalidades:
 	# 1)Se hace seleccion por torneo escogiendo
-	#k = 2 de los cromosomas y se toman de a
-	# 2 cromosomas por torneo. Al final se insertan
-	# los mutados a la población.
+	# k = 2 de los cromosomas, es decir, se toman de a
+	# 2 cromosomas por torneo. Al final se mutan los cromosomas ganadores y se 
+	#insertan a la población, sin eliminar a los anteriores.
+	#
 	#2)Se hace selección por diversidad. Es decir, se busca 
 	# cromosoma cuya aptitud tenga la ocurrencia mas baja.
+	#
 	#3) Esta una estrategia mixta de 1) y 2). Se ordena los cromosomas en función de su diversidad
-	# y se aplica torneo a dos elementos contiguos (el torneo se gana con aptitud) 
+	# y se aplica torneo a dos elementos contiguos (el torneo se gana con aptitud).
+	# 
 	#4) Tambien es una estrategia mixta entre 1) y 2). Se ordena los cromosomas en función de su diversidad,
 	# pero esta vez se aplica elitismo. Se mantienen el 10% de los cromosomas del top y se aplica torneo(con la aptitud)
 	# al 90% restante
+	#
 	#@param tipo_seleccion [String] Texto que representa el tipo de selección del AG
 	def seleccionar_cromosomas!(tipo_seleccion)
 		p "Seleccionando cromosomas"
@@ -478,7 +483,9 @@ class AG_NReinas
 
 	end
 	
-	#Método principal del  AG
+	#Método principal del  AG.
+	#Inicialializa y ejecuta el AG, ademas de
+	#guardar los resultados en archivos
 	def ejecutar_AG
 		nr = NReinas.new
 		nr.inicializar_cromosomas @tamaño
