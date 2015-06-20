@@ -89,7 +89,7 @@ class Cromosoma < Array
 
 	#Método de clase que cumple la función de getter para la variable de clase del mismo nombre
 	#
-	#@return num_evaluaciones [Integer] El numero de evaluaciones en los cromosomas
+	#@return @@num_evaluaciones [Integer] El numero de evaluaciones en los cromosomas
 	def self.num_evaluaciones
 		@@num_evaluaciones
 	end
@@ -177,6 +177,7 @@ class NReinas < Array
 	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
 		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
 		total_generaciones = 0
+		tiempo_inicial = Time.now
 		1.upto(num_generaciones){|generacion|
 			p "============> Generacion : #{generacion}"
 			total_generaciones = generacion
@@ -190,6 +191,7 @@ class NReinas < Array
 			end
 			
 			}
+		tiempo_ejecucion = Time.now - tiempo_inicial
 		salida = "=======================ENTRADAS===========================\n"
 		salida += "La dimension del tablero fue #{@num_cromosomas}\n"
 		salida += "El maximo de generaciones fue #{num_generaciones}\n"
@@ -198,7 +200,8 @@ class NReinas < Array
 		salida += "Recuerde que una posición en la lista representa un columna en el tablero.\n Y el valor en cada posición representa una fila\n\n"
 		salida += "El mejor cromosoma con aptitud= #{@mejor_cromosoma.aptitud} fue #{@mejor_cromosoma}\n"
 		salida += "El numero de evaluaciones fue  #{Cromosoma.num_evaluaciones}\n"
-		salida += "El total de generaciones fue  #{total_generaciones}"
+		salida += "El total de generaciones fue  #{total_generaciones}\n"
+		salida += "El tiempo de ejecución fue de #{tiempo_ejecucion} segundos"
 		salida
 	end
 
@@ -242,6 +245,7 @@ class NReinas < Array
 	# al 90% restante
 	#
 	#@param tipo_seleccion [String] Texto que representa el tipo de selección del AG
+	#@note Este método cambia el estado de los cromosomas
 	def seleccionar_cromosomas!(tipo_seleccion)
 		p "Seleccionando cromosomas"
 		if tipo_seleccion == 'torneo'
@@ -326,14 +330,14 @@ class NReinas < Array
 			}
 			
 			cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
-			p "Cromosomas ordenado #{cromosomas_ordenados}"
+			#p "Cromosomas ordenado #{cromosomas_ordenados}"
 			k = 2
 			x = -1
 			y = -1
 			k.downto(1) { |n|
 				while true do
 					x = rand(0...@num_cromosomas)
-					p "x = #{x}"
+					#p "x = #{x}"
 					if x == 0 then
 						y = 1
 						#p "y= 1"
@@ -504,7 +508,8 @@ class AG_NReinas
 end
 
 
-
-ag = AG_NReinas.new
-ag.ejecutar_AG
+if __FILE__ == $PROGRAM_NAME
+	ag = AG_NReinas.new
+	ag.ejecutar_AG
+end
  
