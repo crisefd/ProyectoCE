@@ -38,6 +38,7 @@ class Cromosoma < Array
 	#
 	#@attribute aptitud [Float] valor <= 0 que mide la aptitud del cromosoma definido como el inverso aditivo del #ataques
 	#@attribute diversidad [Integer] valor >= 0 que mide la aptitud del cromosoma definido como la ocurrencia de una aptitud
+	#@attribute num_genes [Integer] valor >= que indica la cantidad de genes del cromosoma
 	attr_accessor :aptitud, :diversidad, :num_genes
 	
 	#Método que da valores al azar a los genes y garantiza
@@ -113,6 +114,7 @@ class Cromosoma < Array
   	end
   	
   	#Método que realiza cruce uniforme a partir de dos cromosomas
+  	#
   	#@param cromosoma1 [Cromosoma] El primer cromosoma padre
   	#@param cromosoma2 [Cromosoma] El segundo cromosoma padre
   	#@return nuevo_cromosoma [Cromosoma] El cromosoma hijo producto del cruce
@@ -150,6 +152,7 @@ Las funciones que debe tener son, al menos:
 class NReinas < Array
 
 	#Método que inicializa los cromomosomas
+	#
 	#@param dimension_tablero [Integer] la magnitud N = #reinas
 	def inicializar_cromosomas(dimension_tablero = 8)
 		@num_cromosomas = dimension_tablero
@@ -167,6 +170,7 @@ class NReinas < Array
 	end
 
 	#Método que ejecuta el AG por generaciones. 
+	#
 	#@param num_generaciones [Integer] La cantidad de generaciones(iteraciones)
 	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
 	#@return salida [String] Texto que contiene la información sobre la ejecución del AG
@@ -200,6 +204,7 @@ class NReinas < Array
 
 	#Método que itera sobre los cromosomas e
 	#invoca su funcion de evaluacion.
+	#
 	#@return respuesta [String] una cadena que indica si se a alcanzado la mejor aptitud posible (= 0)
 	#@note Este método cambia el estado de los cromosomas
 	def evaluar_cromosomas!
