@@ -103,11 +103,15 @@ Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (re
 
 	require 'rubygems'
 	require 'bundler/setup'
+	
+# Usando el Software
+Con cucumber cada vez que haya una iteración, verificarlo así(estando en el directorio raíz):
+	$ bundle exec cucumber
 
-15)Con cucumber cada vez que haya una iteración, verificarlo así(estando en el directorio raíz):
-	$ bundle exec cucumber 
+Para ejecutar el programa desde terminal:
+	$ ruby aplicacion.rb
 
-16) Para generar la documentaciónos de YARD, debe colocar los archivos fuente(.rb) en una subcarpeta llamada "lib" y 
+Para generar la documentaciónos de YARD, debe colocar los archivos fuente(.rb) en una subcarpeta llamada "lib" y 
 desde arriba de esta(/../dir_raiz/lib/aplicacion.rb) se usa el comando:
 
 	$ yard
