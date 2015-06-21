@@ -108,6 +108,7 @@ Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (re
 Con cucumber cada vez que haya una iteración, verificarlo así(estando en el directorio raíz):
 
 	$ bundle exec cucumber
+Para mayor información sobre Cucumber, visitar: https://cucumber.io/
 
 Para ejecutar el programa desde terminal:
 
@@ -117,3 +118,5 @@ Para generar la documentaciónos de YARD, debe colocar los archivos fuente(.rb) 
 desde arriba de esta(/../dir_raiz/lib/aplicacion.rb) se usa el comando:
 
 	$ yard
+
+Para más información sobre YARD, visitar http://yardoc.org/
