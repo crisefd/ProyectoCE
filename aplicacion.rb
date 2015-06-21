@@ -18,8 +18,7 @@ y el contenido indica la fila donde se encuentra la Reina en esa columna.
 El Cromosoma también debe contener su aptitud. 
 Al crear y mutar el Cromosoma hay que garantizar que no haya valores de los genes repetidos. 
 Con esta codificación se asegura que no haya ataques en filas ni en columnas, 
-y solo queda verificar en diagonales.  Las funciones que debe tener el Cromosoma son, 
-al menos:
+y solo queda verificar en diagonales.  Las funciones que tienel cromosoma son:
 * Crear cromosomas con nun numero de genes dado y con los valores
   Para los genes al azar y sin repetirse
 * Mutar un cromosomaa por intercambio de genes
@@ -30,19 +29,26 @@ class Cromosoma < Array
 
 	#Variable de clase que cuenta la cantidad
 	#de veces que se llama a la función
-	#evaluar
+	#evaluar (inicialmente es 0)
 	@@num_evaluaciones = 0
 	
-	#Se definen los atributos del cromosoma, al igual
-	#que los métodos de acceso para ellos.
-	#
-	#@attribute aptitud [Float] valor <= 0 que mide la aptitud del cromosoma definido como el inverso aditivo del #ataques
-	#@attribute diversidad [Integer] valor >= 0 que mide la aptitud del cromosoma definido como la ocurrencia de una aptitud
-	#@attribute num_genes [Integer] valor >= que indica la cantidad de genes del cromosoma
-	attr_accessor :aptitud, :diversidad, :num_genes
+
+	#@!attribute aptitud 
+	#	@return [Float] un valor <= 0 que mide la aptitud del cromosoma definido como el inverso aditivo del #ataques
+	attr_accessor :aptitud 
+	
+	#@!attribute diversidad
+	#	@return [Integer] un valor >= 0 que mide la aptitud del cromosoma definido como la ocurrencia de una aptitud
+	attr_accessor :diversidad
+	
+	#@!attribute num_genes
+	#	@return [Integer] un valor >= 0 que indica la cantidad de genes del cromosoma
+	attr_accessor :num_genes
 	
 	#Método que da valores al azar a los genes y garantiza
-	#que no se repitan
+	#que no se repitan.
+	#
+	#@return [void]
 	def inicializar_genes
 		@num_genes = self.length
 		@aptitud = 0
@@ -51,6 +57,9 @@ class Cromosoma < Array
 	end
 	
 	#Método inicializar_genes2
+	#
+	#@note Este método fue implementado para propositos de pruebas y de depuración.
+	#No tiene ningun uso en realidad
 	def inicializar_genes2
 		@num_genes = self.length
 		@aptitud = 0
@@ -62,6 +71,7 @@ class Cromosoma < Array
 	#atancado usando la formula de la pendiete:
 	# m = (X2 - X1)/(Y2 - Y1)
 	#
+	#@return [void]
 	#@note Este método altera el estado del objeto Cromosoma
 	def evaluar!
 		@@num_evaluaciones += 1
@@ -89,15 +99,16 @@ class Cromosoma < Array
 
 	#Método de clase que cumple la función de getter para la variable de clase del mismo nombre
 	#
-	#@return @@num_evaluaciones [Integer] El numero de evaluaciones en los cromosomas
+	#@return [Integer] num_evaluaciones. El número de evaluaciones en los cromosomas
 	def self.num_evaluaciones
 		@@num_evaluaciones
 	end
 	
 	#Método de clase que muta el cromosoma por intercambio de genes.
+	# Se toman al azar dos genes diferentes en el cromosoma y se intercambian
 	#
 	#@param cromosoma [Cromosoma] El objeto cromosoma a mutar
-	#@return cromosoma_mutado [Cromosoma] El objeto cromosoma despues de ser mutado
+	#@return [Cromosoma] cromosoma_mutado. El objeto cromosoma despues de ser mutado
   	def self.mutar(cromosoma)
   		cromosoma_mutado = cromosoma.clone
   		pos1 = rand(0...cromosoma_mutado.num_genes)
@@ -117,7 +128,7 @@ class Cromosoma < Array
   	#
   	#@param cromosoma1 [Cromosoma] El primer cromosoma padre
   	#@param cromosoma2 [Cromosoma] El segundo cromosoma padre
-  	#@return nuevo_cromosoma [Cromosoma] El cromosoma hijo producto del cruce
+  	#@return [Cromosoma] nuevo_cromosoma. El cromosoma hijo producto del cruce
 	def self.cruzar(cromosoma1, cromosoma2)
 		nuevo_cromosoma = Cromosoma.new cromosoma1.length
 		iteraciones = cromosoma1.num_genes - 1
@@ -138,12 +149,12 @@ end
 =begin 
 @author Cristhian Fuertes
 NReinas hereda de Array y almacena cromosomas.
-Las funciones que debe tener son, al menos:
+Las funciones que tiene son:
 * Crear la población con un numero de cromosomas dado
-* Ejecutar (durante un número de generaciones dada; 
-   y en cada generación se hace evaluación de los Cromosomas, 
-   selección, mutación y reemplazo).
-* Evaluar cromosoma:detectar ataques de Reinas en las 
+* Ejecutar durante un número de generaciones dada. 
+  En cada generación se hace evaluación de los Cromosomas, 
+  selección, mutación y reemplazo).
+* Evaluar cromosoma: detectar ataques de Reinas en las 
   diagonales. Esta función debe retornar el número de ataques 
   con signo negativo, y a ello le llamamos "aptitud". 
   Lo ideal es llegar a aptitud==0. Si hay ataques, 
@@ -153,7 +164,8 @@ class NReinas < Array
 
 	#Método que inicializa los cromomosomas
 	#
-	#@param dimension_tablero [Integer] la magnitud N = #reinas
+	#@param dimension_tablero [Integer] la magnitud N = cantidad de reinas
+	#@return [void]
 	def inicializar_cromosomas(dimension_tablero = 8)
 		@num_cromosomas = dimension_tablero
 		p "Inicializando con num cromosomas = #{@num_cromosomas}"
@@ -173,7 +185,7 @@ class NReinas < Array
 	#
 	#@param num_generaciones [Integer] La cantidad de generaciones(iteraciones)
 	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
-	#@return salida [String] Texto que contiene la información sobre la ejecución del AG
+	#@return [String]  salida. Texto que contiene la información sobre la ejecución del AG
 	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
 		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
 		total_generaciones = 0
@@ -208,7 +220,7 @@ class NReinas < Array
 	#Método que itera sobre los cromosomas e
 	#invoca su funcion de evaluacion.
 	#
-	#@return respuesta [String] una cadena que indica si se a alcanzado la mejor aptitud posible (= 0)
+	#@return [String] respuesta. Una cadena que indica si se ha alcanzado la mejor aptitud posible (= 0)
 	#@note Este método cambia el estado de los cromosomas
 	def evaluar_cromosomas!
 		respuesta = 'continuar'
@@ -228,13 +240,16 @@ class NReinas < Array
 	end
 
 	#Método que determina que cromosomas
-	#pasaran a la siguiente generación.Tiene cuatro modalidades:
-	# 1)Se hace seleccion por torneo escogiendo
+	#pasaran a la siguiente generación.
+	#
+	#Tiene cuatro modalidades:
+	#
+	# 1) Se hace seleccion por torneo escogiendo
 	# k = 2 de los cromosomas, es decir, se toman de a
 	# 2 cromosomas por torneo. Al final se mutan los cromosomas ganadores y se 
 	#insertan a la población, sin eliminar a los anteriores.
 	#
-	#2)Se hace selección por diversidad. Es decir, se busca 
+	#2) Se hace selección por diversidad. Es decir, se busca 
 	# cromosoma cuya aptitud tenga la ocurrencia mas baja.
 	#
 	#3) Esta una estrategia mixta de 1) y 2). Se ordena los cromosomas en función de su diversidad
@@ -245,7 +260,10 @@ class NReinas < Array
 	# al 90% restante
 	#
 	#@param tipo_seleccion [String] Texto que representa el tipo de selección del AG
+	#@return [void]
 	#@note Este método cambia el estado de los cromosomas
+	#@note La modalidad 3 no es una buena estrategia. Evite usarla
+	#@note La modalidad 4 es la mejor estrategia para tamaños de entrada grandes
 	def seleccionar_cromosomas!(tipo_seleccion)
 		p "Seleccionando cromosomas"
 		if tipo_seleccion == 'torneo'
@@ -495,6 +513,8 @@ class AG_NReinas
 	#Método principal del  AG.
 	#Inicialializa y ejecuta el AG, ademas de
 	#guardar los resultados en archivos
+	#
+	#@return [void]
 	def ejecutar_AG
 		nr = NReinas.new
 		nr.inicializar_cromosomas @tamaño
