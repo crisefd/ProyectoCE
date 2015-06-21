@@ -4,14 +4,16 @@ Proyecto final del curso de Computación Evolutiva de la Escuela de Ingeniería 
 El trabajo consiste en escribir un algoritmo genético (GA) en paradigma OO y lenguaje Ruby,siguiendo una metodología de desarrollo ágil basada en pruebas (Cucumber), y aplicarlo para resolver un problema fácil parametrizado en el tamaño del problema N, concretamente las N-damas: 
 en un tablero de ajedrez de NxN casillas, colocar N damas de modo que no se ataquen mutuamente. 
 
-Final project of the course of Evolutionary Computation, School of Systems Engineering and computation of the Universidad del Valle (Colombia)
 
+
+Final project of the course of Evolutionary Computation, School of Systems Engineering and computation of the Universidad del Valle (Colombia)
 
 The objective of this project is to write a genetic algorithm (GA) using the Ruby programming language, following an agile development methodology based on evidence (Cucumber), and apply it to solve an easy problem parameterized in the problem size N, namely N Queen Puzzle:
 an NxN chessboard squares, place N queens so as not to attack one another.
 
 
 Para la instalación de Ruby y Cucumber sistemas operativos basados en Debian, siga los siguientes pasos:
+
 
 To install Ruby and Cucumber in any Debain base operating , follow these steps:
 
@@ -64,18 +66,19 @@ Buscar el directorio donde se guardan los esquemas de color para cada lenguaje
 	$ locate gtksourceview | grep 'javascript.lang$'
 
 Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (requiere permisos de root).
+
 10) Para crear un proyecto de Ruby:
 
-10.1) Crear un directorio de trabajo
+10.1) Crear un directorio de trabajo (no es necesario si ya clonaste el repositorio)
 	
 	$ mkdir CE_proyecto
 	$ cd CE_proyecto
 
-10.2) Se inicializa el archivo de las gemas
+10.2) Se inicializa el archivo de las gemas (no es necesario si ya clonaste el repositorio)
 	
 	$ bundle init
 
-11) Editar el archivo Gemfile:
+11) Editar el archivo Gemfile (no es necesario si ya clonaste el repositorio)
 
 	$ gedit Gemfile
 
@@ -92,11 +95,11 @@ Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (re
 
 	$ bundle install
 
-13) Crear el archivo de Ruby, por ejemplo:
+13) Crear el archivo de Ruby, por ejemplo (no es necesario si ya clonaste el repositorio)
 
 	$ gedit algoritmoGenetico.rb 
 
-14) En las primeras lìneas poner:
+14) En las primeras lìneas poner (no es necesario si ya clonaste el repositorio)
 
 	require 'rubygems'
 	require 'bundler/setup'
