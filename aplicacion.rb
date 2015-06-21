@@ -14,12 +14,12 @@ require 'date'
 @author Cristhian Fuertes
 Crosomoma es un array de genes. o sea, hereda de Array. 
 Y los genes son números enteros. La posición en el Array indica la columna del tablero 
-y el contenido indica la fila donde se encuentra la Reina en esa columna. 
+y el contenido indica la fila donde se encuentra la reina en esa columna. 
 El Cromosoma también debe contener su aptitud. 
 Al crear y mutar el Cromosoma hay que garantizar que no haya valores de los genes repetidos. 
 Con esta codificación se asegura que no haya ataques en filas ni en columnas, 
 y solo queda verificar en diagonales.  Las funciones que tienel cromosoma son:
-* Crear cromosomas con nun numero de genes dado y con los valores
+* Crear cromosomas con nun número de genes dado y con los valores
   Para los genes al azar y sin repetirse
 * Mutar un cromosomaa por intercambio de genes
 * Cruzar uniformemente un par de cromosomas 
@@ -132,6 +132,7 @@ class Cromosoma < Array
   	#@param cromosoma1 [Cromosoma] El primer cromosoma padre
   	#@param cromosoma2 [Cromosoma] El segundo cromosoma padre
   	#@return [Cromosoma] nuevo_cromosoma. El cromosoma hijo producto del cruce
+  	#@note El cruce uniforme no se usa en practica en este AG. La implementación es solo por razones didacticas
 	def self.cruzar(cromosoma1, cromosoma2)
 		nuevo_cromosoma = Cromosoma.new cromosoma1.length
 		iteraciones = cromosoma1.num_genes - 1
@@ -153,7 +154,7 @@ end
 @author Cristhian Fuertes
 NReinas hereda de Array y almacena cromosomas.
 Las funciones que tiene son:
-* Crear la población con un numero de cromosomas dado
+* Crear la población con un número de cromosomas dado
 * Ejecutar durante un número de generaciones dada. 
   En cada generación se hace evaluación de los Cromosomas, 
   selección, mutación y reemplazo).
