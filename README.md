@@ -11,11 +11,12 @@ The objective of this project is to write a genetic algorithm (GA) using the Rub
 an NxN chessboard squares, place N queens so as not to attack one another.
 
 
-Para la instalación de Ruby y Cucumber en Sistemas Operativos GNU/Linux siga los siguientes pasos:
-To install Ruby and Cucumber in any operating system GNU / Linux, follow these steps:
+Para la instalación de Ruby y Cucumber sistemas operativos basados en Debian, siga los siguientes pasos:
+
+To install Ruby and Cucumber in any Debain base operating , follow these steps:
 
 
-# Instalación de rvm (y ruby, cucumber, etc).
+# Instalación de rvm  ruby, cucumber, etc.
 La forma sofisticada (si vamos a trabajar con frecuencia con este lenguaje, para poder manejar en cada proyecto distintas versiones del compilador y de las gemas):
 
 Se instalan en una cuenta normal, sin permisos de root. Ojo: no poner sudo delante. La documentación de rvm (manejador de versiones de Ruby) está en https://rvm.io/
@@ -25,7 +26,7 @@ Abrir la terminal
 1)
 	$ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 
-	 Si lo anterior no funciona, intente:
+Si lo anterior no funciona, intente:
 
 	$ curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 
