@@ -19,11 +19,10 @@ To install Ruby and Cucumber in any Debain base operating , follow these steps:
 # Instalación de rvm  ruby, cucumber, etc.
 La forma sofisticada (si vamos a trabajar con frecuencia con este lenguaje, para poder manejar en cada proyecto distintas versiones del compilador y de las gemas):
 
-Se instalan en una cuenta normal, sin permisos de root. Ojo: no poner sudo delante. La documentación de rvm (manejador de versiones de Ruby) está en https://rvm.io/
+Se instalan en una cuenta normal, sin permisos de root. Ojo: no poner "sudo" delante. La documentación de rvm (manejador de versiones de Ruby) está en https://rvm.io/
 
-Abrir la terminal
 
-1)
+1) Abrir la terminal
 
 	$ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 
