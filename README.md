@@ -66,27 +66,27 @@ Buscar el directorio donde se guardan los esquemas de color para cada lenguaje
 Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (requiere permisos de root).
 10) Para crear un proyecto de Ruby:
 
-	10.1) Crear un directorio de trabajo
+10.1) Crear un directorio de trabajo
 	
-		$ mkdir CE_proyecto
-		$ cd CE_proyecto
+	$ mkdir CE_proyecto
+	$ cd CE_proyecto
 
-	10.2) Se inicializa el archivo de las gemas
+10.2) Se inicializa el archivo de las gemas
 	
-		$ bundle init
+	$ bundle init
 
 11) Editar el archivo Gemfile:
 
 	$ gedit Gemfile
 
-	11.1) Se escribe lo siguiente:
+11.1) Se escribe lo siguiente:
 	
-		source 'http://rubygems.org'
-		gem 'cucumber'
-		gem 'rspec'
-		gem 'yard'
+	source 'http://rubygems.org'
+	gem 'cucumber'
+	gem 'rspec'
+	gem 'yard'
 
-	11.2) Salvar y salir
+11.2) Salvar y salir
 
 12) Se agregan las gemas al directorio del proyecto
 
@@ -106,4 +106,5 @@ Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (re
 
 16) Para generar la documentaciónos de YARD, debe colocar los archivos fuente(.rb) en una subcarpeta llamada "lib" y 
 desde arriba de esta(/../dir_raiz/lib/aplicacion.rb) se usa el comando:
+
 	$ yard
