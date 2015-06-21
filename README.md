@@ -15,7 +15,7 @@ an NxN chessboard squares, place N queens so as not to attack one another.
 Para la instalación de Ruby y Cucumber sistemas operativos basados en Debian, siga los siguientes pasos:
 
 
-To install Ruby and Cucumber in any Debain base operating , follow these steps:
+To install Ruby and Cucumber in any Debian based operating system , follow these steps:
 
 
 # Instalación de rvm  ruby, cucumber, etc.
@@ -115,7 +115,7 @@ Para ejecutar el programa desde terminal:
 	$ ruby aplicacion.rb
 
 Para generar la documentaciónos de YARD, debe colocar los archivos fuente(.rb) en una subcarpeta llamada "lib" y 
-desde arriba de esta(/../dir_raiz/lib/aplicacion.rb) se usa el comando:
+desde el directorio raíz (/../dir_raiz/lib/aplicacion.rb) se usa el comando:
 
 	$ yard
 
