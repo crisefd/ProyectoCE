@@ -48,6 +48,8 @@ class Cromosoma < Array
 	#Método que da valores al azar a los genes y garantiza
 	#que no se repitan.
 	#
+	#@note La codificación del cromosoma elimina la posibilidad de ataques de reinas
+	# por filas o por columnas
 	#@return [void]
 	def inicializar_genes
 		@num_genes = self.length
@@ -60,6 +62,7 @@ class Cromosoma < Array
 	#
 	#@note Este método fue implementado para propositos de pruebas y de depuración.
 	#No tiene ningun uso en realidad
+	#@return [void]
 	def inicializar_genes2
 		@num_genes = self.length
 		@aptitud = 0
