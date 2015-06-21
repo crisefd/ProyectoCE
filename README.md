@@ -24,6 +24,7 @@ Se instalan en una cuenta normal, sin permisos de root. Ojo: no poner sudo delan
 Abrir la terminal
 
 1)
+
 	$ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 
 Si lo anterior no funciona, intente:
@@ -31,24 +32,31 @@ Si lo anterior no funciona, intente:
 	$ curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 
 2) 
+
 	$ curl -sSL https://get.rvm.io | bash -s stable
 
 3)
+
 	$ source ~/.rvm/scripts/rvm
 
 4)
+
 	$ sudo apt-get update
 
 5) Se instala la versión 2.1.5 de Ruby
+
 	$ rvm install 2.1.5
 
 6)
+
 	$ rvm docs generate-ri
 
 7) Se especifica la versión que se usara en el proyecto
+
 	$ rvm use 2.1.5
 
 8) Se instalan las gemas del proyecto
+
 	$ gem install rspec cucumber bundler yard
 
 9)Para que gedit coloree adecuadamente los archivos .feature:
@@ -60,16 +68,20 @@ Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (re
 10) Para crear un proyecto de Ruby:
 
 	10.1) Crear un directorio de trabajo
+	
 		$ mkdir CE_proyecto
 		$ cd CE_proyecto
 
 	10.2) Se inicializa el archivo de las gemas
+	
 		$ bundle init
 
 11) Editar el archivo Gemfile:
+
 	$ gedit Gemfile
 
 	11.1) Se escribe lo siguiente:
+	
 		source 'http://rubygems.org'
 		gem 'cucumber'
 		gem 'rspec'
@@ -78,11 +90,15 @@ Copiar el archivo gherkin.lang (lo pueden buscar en la web) a ese directorio (re
 	11.2) Salvar y salir
 
 12) Se agregan las gemas al directorio del proyecto
+
 	$ bundle install
 
 13) Crear el archivo de Ruby, por ejemplo:
+
 	$ gedit algoritmoGenetico.rb 
+
 14) En las primeras lìneas poner:
+
 	require 'rubygems'
 	require 'bundler/setup'
 
