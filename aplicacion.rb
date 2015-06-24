@@ -122,7 +122,7 @@ class Cromosoma < Array
   			end
   		end
   		cromosoma_mutado[pos1], cromosoma_mutado[pos2] = cromosoma_mutado[pos2], cromosoma_mutado[pos1]
-  		p "Cromosoma mutado = #{cromosoma_mutado} "
+  		#p "Cromosoma mutado = #{cromosoma_mutado} "
   		cromosoma_mutado
   	end
 
@@ -171,7 +171,7 @@ class NReinas < Array
 	#@return [void]
 	def inicializar_cromosomas(dimension_tablero = 8)
 		@num_cromosomas = dimension_tablero
-		p "Inicializando con num cromosomas = #{@num_cromosomas}"
+		#p "Inicializando con num cromosomas = #{@num_cromosomas}"
 		i = 0
 		while i < @num_cromosomas do
 			array = (0...dimension_tablero).to_a
@@ -190,11 +190,11 @@ class NReinas < Array
 	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
 	#@return [String]  salida. Texto que contiene la información sobre la ejecución del AG
 	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
-		p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
+		#p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
 		total_generaciones = 0
 		tiempo_inicial = Time.now
 		1.upto(num_generaciones){|generacion|
-			p "============> Generacion : #{generacion}"
+			#p "============> Generacion : #{generacion}"
 			total_generaciones = generacion
 			res = evaluar_cromosomas!
 			if res == 'detener' then
@@ -220,6 +220,7 @@ class NReinas < Array
 		salida
 	end
 
+private
 	#Método que itera sobre los cromosomas e
 	#invoca su funcion de evaluacion.
 	#
@@ -245,7 +246,7 @@ class NReinas < Array
 	#Método que determina que cromosomas
 	#pasaran a la siguiente generación.
 	#
-	#Tiene cuatro modalidades:
+	#Tiene tres modalidades:
 	#
 	# 1) Se hace selección por torneo escogiendo
 	# k = 2 de los cromosomas, es decir, se toman de a
@@ -255,198 +256,161 @@ class NReinas < Array
 	#2) Se hace selección por diversidad. Es decir, se busca
 	# cromosoma cuya aptitud tenga la ocurrencia mas baja.
 	#
-	#3) Esta una estrategia mixta de 1) y 2). Se ordena los cromosomas en función de su diversidad
-	# y se aplica torneo a dos elementos contiguos (el torneo se gana con aptitud).
-	#
-	#4) Tambien es una estrategia mixta entre 1) y 2). Se ordena los cromosomas en función de su diversidad,
+	#3) Tambien es una estrategia mixta entre 1) y 2). Se ordena los cromosomas en función de su diversidad,
 	# pero esta vez se aplica elitismo. Se mantienen el 10% de los cromosomas del top y se aplica torneo(con la aptitud)
 	# al 90% restante
 	#
 	#@param tipo_seleccion [String] Texto que representa el tipo de selección del AG
 	#@return [void]
 	#@note Este método cambia el estado de los cromosomas
-	#@note La modalidad 3 no es una buena estrategia. Evite usarla
-	#@note La modalidad 4 es la mejor estrategia para tamaños de entrada grandes
+	#@note La modalidad 3 es la mejor estrategia para tamaños de entrada grandes
 	def seleccionar_cromosomas!(tipo_seleccion)
-		p "Seleccionando cromosomas"
 		if tipo_seleccion == 'torneo'
-			k = 2
-			x = -1
-			y = -1
-			k.downto(1) { |n|
-				while true do
-					x = rand(0...@num_cromosomas)
-					y = rand(0...@num_cromosomas)
-					#p "x = #{x}, y= #{y}"
-					if x != y then
-						break
-					end
-				end
-				#p "x = #{x}, y= #{y}"
-				crom_1 = self[x]
-				crom_2 = self[y]
-				p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
-				if crom_1.aptitud > crom_2.aptitud then
-					p "El cromosoma 1 gana"
-					delete_at(y)
-					push(Cromosoma.mutar(crom_1))
-				else
-					p "El cromosoma 2 gana"
-					delete_at(x)
-					push(Cromosoma.mutar(crom_2))
-				end
-			  }
+			seleccionar_por_torneo!
 		elsif tipo_seleccion == 'diversidad' then
-			aptitudes = Array.new(@num_cromosomas)
-			aptitudes.each_index { |i|
-				aptitudes[i] = self[i].aptitud
-			}
-			#p "Aptitudes = #{aptitudes}"
-			max = aptitudes.max.to_i
-			min = aptitudes.min.to_i
-			#p "min #{min}"
-			#p "max #{max}"
-			array_cuentas = Array.new -1 * min, 0
-			aptitudes.each{|aptitud|
-				k = (-1 * aptitud.to_i) - 1
-				array_cuentas[k] += 1
-			}
-			#p "Array cuentas = #{array_cuentas}"
-			my_min = lambda{|array|
-				min_ = array.max
-				array.each{|e|
-				if e <= min_ && e > 0 then
-					min_ = e
-				end
-				}
-				return min_
-			}
-			min_cuentas = my_min.call array_cuentas
-			#p "min_cuentas = #{min_cuentas}"
-			ind_1 = array_cuentas.index(min_cuentas)
-			#p "ind_1 = #{ind_1}"
-			#ind_2 = aptitudes[ind_1]
-			ind_2 = aptitudes.index((-1.0 * (ind_1 + 1)))
-			#p "ind_2 = #{ind_2}, aptitudes[ind_2] = #{aptitudes[ind_2]}"
-			cromosoma = self[ind_2].clone
-			cromosoma.diversidad = min_cuentas
-			p "El cromosoma #{cromosoma} con aptitud= #{cromosoma.aptitud} y diversidad = #{cromosoma.diversidad} es el mejor"
-			self.delete_at(ind_1)
-			self.push(Cromosoma.mutar(cromosoma))
-		elsif tipo_seleccion == "mixto" then
-			aptitudes = Array.new(@num_cromosomas)
-			aptitudes.each_index { |i|
-				aptitudes[i] = self[i].aptitud
-			}
-			max = aptitudes.max.to_i
-			min = aptitudes.min.to_i
-			array_cuentas = Array.new -1 * min, 0
-			aptitudes.each{|aptitud|
-				k = (-1 * aptitud.to_i) - 1
-				array_cuentas[k] += 1
-			}
-			each_index{|i|
-				k = (-1 * aptitudes[i].to_i) - 1
-				self[i].diversidad = array_cuentas[k]
-			}
-
-			cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
-			#p "Cromosomas ordenado #{cromosomas_ordenados}"
-			k = 2
-			x = -1
-			y = -1
-			k.downto(1) { |n|
-				while true do
-					x = rand(0...@num_cromosomas)
-					#p "x = #{x}"
-					if x == 0 then
-						y = 1
-						#p "y= 1"
-						break
-					elsif x == @num_cromosomas -1 then
-						y = @num_cromosomas - 2
-						#p "y = #{y}"
-						break
-					else
-						dec = rand(0..1)
-						if dec == 0 then
-							y = x - 1
-							#p "y = #{y}"
-							break
-						elsif dec == 1 then
-							y = x + 1
-							#p "y = #{y}"
-							break
-						end
-					end
-				end
-				#p "x = #{x}, y= #{y}"
-				crom_1 = cromosomas_ordenados[x]
-				crom_2 = cromosomas_ordenados[y]
-				p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
-				if crom_1.aptitud > crom_2.aptitud then
-					p "El cromosoma 1 gana"
-					delete_at(y)
-					push(Cromosoma.mutar(crom_1))
-				else
-					p "El cromosoma 2 gana"
-					delete_at(x)
-					push(Cromosoma.mutar(crom_2))
-				end
-			  }
-			elsif tipo_seleccion == 'elitista' then
-				aptitudes = Array.new(@num_cromosomas)
-			aptitudes.each_index { |i|
-				aptitudes[i] = self[i].aptitud
-			}
-			max = aptitudes.max.to_i
-			min = aptitudes.min.to_i
-			array_cuentas = Array.new -1 * min, 0
-			aptitudes.each{|aptitud|
-				k = (-1 * aptitud.to_i) - 1
-				array_cuentas[k] += 1
-			}
-			each_index{|i|
-				k = (-1 * aptitudes[i].to_i) - 1
-				self[i].diversidad = array_cuentas[k]
-			}
-
-			cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
-			#p "Cromosomas ordenado #{cromosomas_ordenados}"
-			p = (0.1 * @num_cromosomas).to_i
-			banderas_crom_elitistas = Array.new @num_cromosomas, 0
-			for i in 0..p
-				banderas_crom_elitistas[i] = 1
-			end
-
-			k = 2
-			x = -1
-			y = -1
-			k.downto(1) { |n|
-				while true do
-					x = rand(0...@num_cromosomas)
-					y = rand(0...@num_cromosomas)
-					#p "x = #{x}, y= #{y}"
-					if x != y && banderas_crom_elitistas[x] == 0 && banderas_crom_elitistas[y] == 0 then
-						break
-					end
-				end
-				#p "x = #{x}, y= #{y}"
-				crom_1 = self[x]
-				crom_2 = self[y]
-				p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
-				if crom_1.aptitud > crom_2.aptitud then
-					p "El cromosoma 1 gana"
-					delete_at(y)
-					push(Cromosoma.mutar(crom_1))
-				else
-					p "El cromosoma 2 gana"
-					delete_at(x)
-					push(Cromosoma.mutar(crom_2))
-				end
-			}
-	    end
+			seleccionar_por_diversidad!
+		elsif tipo_seleccion == 'elitista' then
+			seleccionar_por_elitismo!
+	  end
 	end
+
+	#Método que selecciona los cromosomas por torneo.
+	#Eligiendo dos veces dos cromosomas al azar , comparando su aptitud, mutando
+	#a los ganadores e insertandolos en la población
+	#
+	#@return [void]
+	def seleccionar_por_torneo!
+		k = 2
+		x = -1
+		y = -1
+		k.downto(1) { |n|
+			while true do
+				x = rand(0...@num_cromosomas)
+				y = rand(0...@num_cromosomas)
+				#p "x = #{x}, y= #{y}"
+				if x != y then
+					break
+				end
+			end
+			#p "x = #{x}, y= #{y}"
+			crom_1 = self[x]
+			crom_2 = self[y]
+			#p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
+			if crom_1.aptitud > crom_2.aptitud then
+				#p "El cromosoma 1 gana"
+				delete_at y
+				push Cromosoma.mutar(crom_1)
+			else
+				#p "El cromosoma 2 gana"
+				delete_at x
+				push Cromosoma.mutar(crom_2)
+			end
+			}
+	end
+
+	#Método que selecciona los cromosomas por diversidad.
+	#Eligiendo el cromosoma cuya aptitud tenga la menor ocurrencia para mutarlo
+	#e insertanlo en la población.
+	#
+	#@return [void]
+	def seleccionar_por_diversidad!
+		aptitudes = Array.new(@num_cromosomas)
+		aptitudes.each_index { |i|
+			aptitudes[i] = self[i].aptitud
+		}
+		#p "Aptitudes = #{aptitudes}"
+		max = aptitudes.max.to_i
+		min = aptitudes.min.to_i
+		#p "min #{min}"
+		#p "max #{max}"
+		array_cuentas = Array.new -1 * min, 0
+		aptitudes.each{|aptitud|
+			k = (-1 * aptitud.to_i) - 1
+			array_cuentas[k] += 1
+		}
+		#p "Array cuentas = #{array_cuentas}"
+		my_min = lambda{|array|
+			min_ = array.max
+			array.each{|e|
+			if e <= min_ && e > 0 then
+				min_ = e
+			end
+			}
+			return min_
+		}
+		min_cuentas = my_min.call array_cuentas
+		#p "min_cuentas = #{min_cuentas}"
+		ind_1 = array_cuentas.index(min_cuentas)
+		#p "ind_1 = #{ind_1}"
+		#ind_2 = aptitudes[ind_1]
+		ind_2 = aptitudes.index((-1.0 * (ind_1 + 1)))
+		#p "ind_2 = #{ind_2}, aptitudes[ind_2] = #{aptitudes[ind_2]}"
+		cromosoma = self[ind_2].clone
+		cromosoma.diversidad = min_cuentas
+		#p "El cromosoma #{cromosoma} con aptitud= #{cromosoma.aptitud} y diversidad = #{cromosoma.diversidad} es el mejor"
+		self.delete_at ind_1
+		self.push Cromosoma.mutar(cromosoma)
+	end
+
+	#Método mixto (con torneo y diversidad). Los cromosomas se ordenan
+	#ascendentemente deacuerdo a su diversidad. El 10% que se encuentre en el top
+	#se mantienen para la siguiente genereación y el 90% restante son sometidos a
+	#torneo por aptitud
+	#
+	#@return [void]
+	def seleccionar_por_elitismo!
+		aptitudes = Array.new(@num_cromosomas)
+		aptitudes.each_index { |i|
+			aptitudes[i] = self[i].aptitud
+		}
+		max = aptitudes.max.to_i
+		min = aptitudes.min.to_i
+		array_cuentas = Array.new -1 * min, 0
+		aptitudes.each{|aptitud|
+			k = (-1 * aptitud.to_i) - 1
+			array_cuentas[k] += 1
+		}
+		each_index{|i|
+			k = (-1 * aptitudes[i].to_i) - 1
+			self[i].diversidad = array_cuentas[k]
+		}
+
+		cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
+		#p "Cromosomas ordenado #{cromosomas_ordenados}"
+		p = (0.1 * @num_cromosomas).to_i
+		banderas_crom_elitistas = Array.new @num_cromosomas, 0
+		for i in 0..p
+			banderas_crom_elitistas[i] = 1
+		end
+
+		k = 2
+		x = -1
+		y = -1
+		k.downto(1) { |n|
+			while true do
+				x = rand(0...@num_cromosomas)
+				y = rand(0...@num_cromosomas)
+				#p "x = #{x}, y= #{y}"
+				if x != y && banderas_crom_elitistas[x] == 0 && banderas_crom_elitistas[y] == 0 then
+					break
+				end
+			end
+			#p "x = #{x}, y= #{y}"
+			crom_1 = self[x]
+			crom_2 = self[y]
+			#p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
+			if crom_1.aptitud > crom_2.aptitud then
+			#	p "El cromosoma 1 gana"
+				delete_at y
+				push Cromosoma.mutar(crom_1)
+			else
+				#p "El cromosoma 2 gana"
+				delete_at x
+				push Cromosoma.mutar(crom_2)
+			end
+		}
+	end
+
 end
 
 
