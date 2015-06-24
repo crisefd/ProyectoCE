@@ -8,7 +8,9 @@ require 'rubygems'
 require 'bundler/setup'
 require 'date'
 
-
+def dd arg
+	p arg
+ end
 
 =begin
 @author Cristhian Fuertes
@@ -214,7 +216,7 @@ class NReinas < Array
 		salida += "=====================RESULTADOS==========================\n"
 		salida += "Recuerde que una posición en la lista representa un columna en el tablero.\n Y el valor en cada posición representa una fila\n\n"
 		salida += "El mejor cromosoma con aptitud= #{@mejor_cromosoma.aptitud} fue #{@mejor_cromosoma}\n"
-		salida += "El numero de evaluaciones fue  #{Cromosoma.num_evaluaciones}\n"
+		salida += "El numero de evaluaciones fue  #{Cromosoma.num_evaluaciones} de un total de #{(1..@num_cromosomas).reduce(1, :*)}\n"
 		salida += "El total de generaciones fue  #{total_generaciones}\n"
 		salida += "El tiempo de ejecución fue de #{tiempo_ejecucion} segundos"
 		salida
@@ -422,59 +424,21 @@ y escritura de los resultados en archivos de texto plano
 =end
 class AG_NReinas
 
-	#Constructor que instancia los parametros para el AG
+	#Constructor de la clase principal del AG.
+	#Toma el vector de argumentos e inicializa las variables de entrada
+	#
+	#@return [void]
 	def initialize
-		while true do
-			puts "¿Tamaño del tablero?"
-			STDOUT.flush
-			tamaño = gets.chomp
-			if tamaño == '' then
-				@tamaño = 8
-				break
-			else
-				begin
-					@tamaño = tamaño.to_i
-					break
-				rescue
-					next
-				end
-			end
+		@dimension_tablero = ARGV[0].to_i
+		@tipo_seleccion = ARGV[1]
+		@generaciones = ARGV[2].to_i
+		if @tipo_seleccion == "t" then
+			@tipo_seleccion = "torneo"
+		elsif @tipo_seleccion == "d" then
+			@tipo_seleccion = "diversidad"
+		elsif @tipo_seleccion == "e" then
+			@tipo_seleccion = "elitista"
 		end
-		while true do
-			puts "¿Tipo de seleccion (torneo/diversidad/mixto/elitista)?"
-			tipo = gets.chomp
-			if tipo == '' || tipo == 'torneo' || tipo == 't'then
-				@tipo = 'torneo'
-				break
-			elsif tipo == 'diversidad' || tipo == 'd' then
-				@tipo = 'diversidad'
-				break
-			elsif tipo == 'mixto' || tipo == 'm' then
-				@tipo = 'mixto'
-				break
-			elsif tipo == 'elitista' || tipo == 'e' then
-					@tipo = 'elitista'
-					break
-			else
-				next
-			end
-		end
-		while true do
-			puts "¿Numero de generaciones?"
-			num_generaciones = gets.chomp
-			if num_generaciones == '' then
-				@num_generaciones = 50
-				break
-			else
-				begin
-					@num_generaciones = num_generaciones.to_i
-					break
-				rescue
-					next
-				end
-			end
-		end
-
 	end
 
 	#Método principal del  AG.
@@ -484,8 +448,8 @@ class AG_NReinas
 	#@return [void]
 	def ejecutar_AG
 		nr = NReinas.new
-		nr.inicializar_cromosomas @tamaño
-		txt_salida = nr.ejecutar @num_generaciones, @tipo
+		nr.inicializar_cromosomas @dimension_tablero
+		txt_salida = nr.ejecutar @generaciones, @tipo_seleccion
 		archivo_salida = open(DateTime.now.to_s, 'w')
 		archivo_salida.write(txt_salida)
 		archivo_salida.close
@@ -496,6 +460,10 @@ end
 
 
 if __FILE__ == $PROGRAM_NAME
+	if ARGV.size != 3 then
+		p "Error de argumentos, se esperaban 3 se recibieron #{ARGV.size}"
+		abort
+	end
 	ag = AG_NReinas.new
 	ag.ejecutar_AG
 end
