@@ -12,17 +12,17 @@ require 'date'
 
 =begin
 @author Cristhian Fuertes
-Crosomoma es un array de genes. o sea, hereda de Array. 
-Y los genes son números enteros. La posición en el Array indica la columna del tablero 
-y el contenido indica la fila donde se encuentra la reina en esa columna. 
-El Cromosoma también debe contener su aptitud. 
-Al crear y mutar el Cromosoma hay que garantizar que no haya valores de los genes repetidos. 
-Con esta codificación se asegura que no haya ataques en filas ni en columnas, 
+Crosomoma es un array de genes. o sea, hereda de Array.
+Y los genes son números enteros. La posición en el Array indica la columna del tablero
+y el contenido indica la fila donde se encuentra la reina en esa columna.
+El Cromosoma también debe contener su aptitud.
+Al crear y mutar el Cromosoma hay que garantizar que no haya valores de los genes repetidos.
+Con esta codificación se asegura que no haya ataques en filas ni en columnas,
 y solo queda verificar en diagonales.  Las funciones que tienel cromosoma son:
 * Crear cromosomas con nun número de genes dado y con los valores
   Para los genes al azar y sin repetirse
 * Mutar un cromosomaa por intercambio de genes
-* Cruzar uniformemente un par de cromosomas 
+* Cruzar uniformemente un par de cromosomas
 =end
 class Cromosoma < Array
 
@@ -31,20 +31,20 @@ class Cromosoma < Array
 	#de veces que se llama a la función
 	#evaluar (inicialmente es 0)
 	@@num_evaluaciones = 0
-	
 
-	#@!attribute aptitud 
+
+	#@!attribute aptitud
 	#	@return [Float] un valor <= 0 que mide la aptitud del cromosoma definido como el inverso aditivo del #ataques
-	attr_accessor :aptitud 
-	
+	attr_accessor :aptitud
+
 	#@!attribute diversidad
 	#	@return [Integer] un valor >= 0 que mide la aptitud del cromosoma definido como la ocurrencia de una aptitud
 	attr_accessor :diversidad
-	
+
 	#@!attribute num_genes
 	#	@return [Integer] un valor >= 0 que indica la cantidad de genes del cromosoma
 	attr_accessor :num_genes
-	
+
 	#Método que da valores al azar a los genes y garantiza
 	#que no se repitan.
 	#
@@ -57,11 +57,10 @@ class Cromosoma < Array
 		@diversidad = 0
 		self.sort_by!{rand()}
 	end
-	
+
 	#Método inicializar_genes2
 	#
-	#@note Este método fue implementado para propositos de pruebas y de depuración.
-	#No tiene ningun uso en realidad
+	#@note Este método fue implementado para propositos de pruebas y de depuración. No tiene ningun uso en realidad
 	#@return [void]
 	def inicializar_genes2
 		@num_genes = self.length
@@ -82,7 +81,7 @@ class Cromosoma < Array
 		verificador_ataques = Array.new @num_genes, 0
 		for x2 in 0...@num_genes
 			y2 = self[x2]
-			for x1 in 0...@num_genes 
+			for x1 in 0...@num_genes
 				y1 = self[x1]
 				if x1 == x2 then
 					next
@@ -106,7 +105,7 @@ class Cromosoma < Array
 	def self.num_evaluaciones
 		@@num_evaluaciones
 	end
-	
+
 	#Método de clase que muta el cromosoma por intercambio de genes.
 	# Se toman al azar dos genes diferentes en el cromosoma y se intercambian
 	#
@@ -126,7 +125,7 @@ class Cromosoma < Array
   		p "Cromosoma mutado = #{cromosoma_mutado} "
   		cromosoma_mutado
   	end
-  	
+
   	#Método que realiza cruce uniforme a partir de dos cromosomas
   	#
   	#@param cromosoma1 [Cromosoma] El primer cromosoma padre
@@ -150,18 +149,18 @@ class Cromosoma < Array
 
 end
 
-=begin 
+=begin
 @author Cristhian Fuertes
 NReinas hereda de Array y almacena cromosomas.
 Las funciones que tiene son:
 * Crear la población con un número de cromosomas dado
-* Ejecutar durante un número de generaciones dada. 
-  En cada generación se hace evaluación de los Cromosomas, 
+* Ejecutar durante un número de generaciones dada.
+  En cada generación se hace evaluación de los Cromosomas,
   selección, mutación y reemplazo).
-* Evaluar cromosoma: detectar ataques de Reinas en las 
-  diagonales. Esta función debe retornar el número de ataques 
-  con signo negativo, y a ello le llamamos "aptitud". 
-  Lo ideal es llegar a aptitud==0. Si hay ataques, 
+* Evaluar cromosoma: detectar ataques de Reinas en las
+  diagonales. Esta función debe retornar el número de ataques
+  con signo negativo, y a ello le llamamos "aptitud".
+  Lo ideal es llegar a aptitud==0. Si hay ataques,
   la aptitud empeora (se vuelve más negativa).
 =end
 class NReinas < Array
@@ -185,7 +184,7 @@ class NReinas < Array
 		#p "Cromosomas iniciales #{self}"
 	end
 
-	#Método que ejecuta el AG por generaciones. 
+	#Método que ejecuta el AG por generaciones.
 	#
 	#@param num_generaciones [Integer] La cantidad de generaciones(iteraciones)
 	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
@@ -205,7 +204,7 @@ class NReinas < Array
 					seleccionar_cromosomas! tipo_seleccion
 				end
 			end
-			
+
 			}
 		tiempo_ejecucion = Time.now - tiempo_inicial
 		salida = "=======================ENTRADAS===========================\n"
@@ -228,7 +227,7 @@ class NReinas < Array
 	#@note Este método cambia el estado de los cromosomas
 	def evaluar_cromosomas!
 		respuesta = 'continuar'
-		each_index { |i| 
+		each_index { |i|
 			self[i].evaluar!
 			if Cromosoma.num_evaluaciones == 1 then
 				@mejor_cromosoma = self[0].clone
@@ -248,17 +247,17 @@ class NReinas < Array
 	#
 	#Tiene cuatro modalidades:
 	#
-	# 1) Se hace seleccion por torneo escogiendo
+	# 1) Se hace selección por torneo escogiendo
 	# k = 2 de los cromosomas, es decir, se toman de a
-	# 2 cromosomas por torneo. Al final se mutan los cromosomas ganadores y se 
+	# 2 cromosomas por torneo. Al final se mutan los cromosomas ganadores y se
 	#insertan a la población, sin eliminar a los anteriores.
 	#
-	#2) Se hace selección por diversidad. Es decir, se busca 
+	#2) Se hace selección por diversidad. Es decir, se busca
 	# cromosoma cuya aptitud tenga la ocurrencia mas baja.
 	#
 	#3) Esta una estrategia mixta de 1) y 2). Se ordena los cromosomas en función de su diversidad
 	# y se aplica torneo a dos elementos contiguos (el torneo se gana con aptitud).
-	# 
+	#
 	#4) Tambien es una estrategia mixta entre 1) y 2). Se ordena los cromosomas en función de su diversidad,
 	# pero esta vez se aplica elitismo. Se mantienen el 10% de los cromosomas del top y se aplica torneo(con la aptitud)
 	# al 90% restante
@@ -300,7 +299,7 @@ class NReinas < Array
 		elsif tipo_seleccion == 'diversidad' then
 			aptitudes = Array.new(@num_cromosomas)
 			aptitudes.each_index { |i|
-				aptitudes[i] = self[i].aptitud  
+				aptitudes[i] = self[i].aptitud
 			}
 			#p "Aptitudes = #{aptitudes}"
 			max = aptitudes.max.to_i
@@ -337,7 +336,7 @@ class NReinas < Array
 		elsif tipo_seleccion == "mixto" then
 			aptitudes = Array.new(@num_cromosomas)
 			aptitudes.each_index { |i|
-				aptitudes[i] = self[i].aptitud  
+				aptitudes[i] = self[i].aptitud
 			}
 			max = aptitudes.max.to_i
 			min = aptitudes.min.to_i
@@ -350,7 +349,7 @@ class NReinas < Array
 				k = (-1 * aptitudes[i].to_i) - 1
 				self[i].diversidad = array_cuentas[k]
 			}
-			
+
 			cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
 			#p "Cromosomas ordenado #{cromosomas_ordenados}"
 			k = 2
@@ -398,7 +397,7 @@ class NReinas < Array
 			elsif tipo_seleccion == 'elitista' then
 				aptitudes = Array.new(@num_cromosomas)
 			aptitudes.each_index { |i|
-				aptitudes[i] = self[i].aptitud  
+				aptitudes[i] = self[i].aptitud
 			}
 			max = aptitudes.max.to_i
 			min = aptitudes.min.to_i
@@ -411,7 +410,7 @@ class NReinas < Array
 				k = (-1 * aptitudes[i].to_i) - 1
 				self[i].diversidad = array_cuentas[k]
 			}
-			
+
 			cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
 			#p "Cromosomas ordenado #{cromosomas_ordenados}"
 			p = (0.1 * @num_cromosomas).to_i
@@ -419,7 +418,7 @@ class NReinas < Array
 			for i in 0..p
 				banderas_crom_elitistas[i] = 1
 			end
-			
+
 			k = 2
 			x = -1
 			y = -1
@@ -458,13 +457,13 @@ Realiza funciones de entrada de datos por consola
 y escritura de los resultados en archivos de texto plano
 =end
 class AG_NReinas
-	
+
 	#Constructor que instancia los parametros para el AG
 	def initialize
 		while true do
-			puts "¿Tamaño del tablero?"  
-			STDOUT.flush  
-			tamaño = gets.chomp  
+			puts "¿Tamaño del tablero?"
+			STDOUT.flush
+			tamaño = gets.chomp
 			if tamaño == '' then
 				@tamaño = 8
 				break
@@ -513,7 +512,7 @@ class AG_NReinas
 		end
 
 	end
-	
+
 	#Método principal del  AG.
 	#Inicialializa y ejecuta el AG, ademas de
 	#guardar los resultados en archivos
@@ -527,8 +526,8 @@ class AG_NReinas
 		archivo_salida.write(txt_salida)
 		archivo_salida.close
 	end
-	
-	
+
+
 end
 
 
@@ -536,4 +535,3 @@ if __FILE__ == $PROGRAM_NAME
 	ag = AG_NReinas.new
 	ag.ejecutar_AG
 end
- 
