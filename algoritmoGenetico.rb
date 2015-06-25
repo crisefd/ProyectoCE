@@ -1,6 +1,6 @@
 #!/home/crisefd/.rvm/rubies/ruby-2.1.5/bin/ruby
 # encoding: utf-8
-# Program: aplicacion.rb
+# Program: algoritmoGenetico.rb
 # Author: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
 # Email: cristhian.fuertes@correounivalle.edu.co, fabian.cano@correounivalle.edu.co, oscar.tigreros@correounivalle.edu.co
 # Creation date: 2015-05-19 21:20
@@ -251,7 +251,7 @@ private
 	#Tiene tres modalidades:
 	#
 	# 1) Se hace selección por torneo escogiendo
-	# k = 2 de los cromosomas, es decir, se toman de a
+	# k = 2 de los cromosomas. Es decir, se toman de a
 	# 2 cromosomas por torneo. Al final se mutan los cromosomas ganadores y se
 	#insertan a la población, sin eliminar a los anteriores.
 	#
