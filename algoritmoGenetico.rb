@@ -271,7 +271,7 @@ private
 			seleccionar_por_torneo!
 		elsif tipo_seleccion == 'diversidad' then
 			seleccionar_por_diversidad!
-		elsif tipo_seleccion == 'elitista' then
+		elsif tipo_seleccion == 'elitismo' then
 			seleccionar_por_elitismo!
 	  end
 	end
@@ -437,7 +437,7 @@ class AG_NReinas
 		elsif @tipo_seleccion == "d" then
 			@tipo_seleccion = "diversidad"
 		elsif @tipo_seleccion == "e" then
-			@tipo_seleccion = "elitista"
+			@tipo_seleccion = "elitismo"
 		end
 	end
 
@@ -450,7 +450,15 @@ class AG_NReinas
 		nr = NReinas.new
 		nr.inicializar_cromosomas @dimension_tablero
 		txt_salida = nr.ejecutar @generaciones, @tipo_seleccion
-		archivo_salida = open(DateTime.now.to_s, 'w')
+		nombre_arch = ""
+		if @tipo_seleccion == "torneo" then
+			nombre_arch = "torneo/#{DateTime.now.to_s}"
+		elsif @tipo_seleccion == "diversidad" then
+			nombre_arch = "diversidad/#{DateTime.now.to_s}"
+		elsif @tipo_seleccion == "elitismo" then
+			nombre_arch = "elitismo/#{DateTime.now.to_s}"
+		end
+		archivo_salida = open(nombre_arch, 'w')
 		archivo_salida.write(txt_salida)
 		archivo_salida.close
 	end
