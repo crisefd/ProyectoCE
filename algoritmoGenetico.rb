@@ -70,9 +70,9 @@ class Cromosoma < Array
 		@diversidad = 0
 	end
 
-	#Método de evaluacion del cromosoma.
+	#Método de evaluación del cromosoma.
 	#Es necesario validar que reinas se estan
-	#atancado usando la formula de la pendiete:
+	#atancado usando la formula de la pendiente:
 	# m = (X2 - X1)/(Y2 - Y1)
 	#
 	#@return [void]
@@ -173,7 +173,6 @@ class NReinas < Array
 	#@return [void]
 	def inicializar_cromosomas(dimension_tablero = 8)
 		@num_cromosomas = dimension_tablero
-		#p "Inicializando con num cromosomas = #{@num_cromosomas}"
 		i = 0
 		while i < @num_cromosomas do
 			array = (0...dimension_tablero).to_a
@@ -183,7 +182,6 @@ class NReinas < Array
 			i += 1
 		end
 		@mejor_cromosoma = nil
-		#p "Cromosomas iniciales #{self}"
 	end
 
 	#Método que ejecuta el AG por generaciones.
@@ -192,11 +190,9 @@ class NReinas < Array
 	#@param tipo_seleccion [String] Texto que presenta el tipo de selección del AG
 	#@return [String]  salida. Texto que contiene la información sobre la ejecución del AG
 	def ejecutar(num_generaciones = 50, tipo_seleccion = 'torneo')
-		#p "Ejecutando con num generaciones = #{num_generaciones} y con tipo de seleccion = #{tipo_seleccion}"
 		total_generaciones = 0
 		tiempo_inicial = Time.now
 		1.upto(num_generaciones){|generacion|
-			#p "============> Generacion : #{generacion}"
 			total_generaciones = generacion
 			res = evaluar_cromosomas!
 			if res == 'detener' then
