@@ -448,11 +448,20 @@ class AG_NReinas
 		txt_salida = nr.ejecutar @generaciones, @tipo_seleccion
 		nombre_arch = ""
 		if @tipo_seleccion == "torneo" then
-			nombre_arch = "torneo/#{DateTime.now.to_s}"
+			system("cd torneo")
+			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
+			nombre_arch = "torneo/#{num_arch + 1}"
+			system("cd ..")
 		elsif @tipo_seleccion == "diversidad" then
-			nombre_arch = "diversidad/#{DateTime.now.to_s}"
+			system("cd diversidad")
+			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
+			nombre_arch = "diversidad/#{num_arch + 1}"
+			system("cd ..")
 		elsif @tipo_seleccion == "elitismo" then
-			nombre_arch = "elitismo/#{DateTime.now.to_s}"
+			system("cd elitismo")
+			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
+			nombre_arch = "elitismo/#{num_arch + 1}"
+			system("cd ..")
 		end
 		archivo_salida = open(nombre_arch, 'w')
 		archivo_salida.write(txt_salida)

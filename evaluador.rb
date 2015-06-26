@@ -97,6 +97,7 @@ private
     arg3 = 100000
     dd "Evaluando por elitismo"
     1.upto(5){|i|
+
       linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
 			1.upto($NUM_PRUEBAS){ |j|
         system(linea)
