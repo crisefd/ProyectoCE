@@ -207,7 +207,7 @@ class NReinas < Array
 		tiempo_ejecucion = Time.now - tiempo_inicial
 		total_evaluaciones_posibles = (1..@num_cromosomas).reduce(1, :*)
 
-		salida = "#{@num_cromosomas},#{total_generaciones},#{@mejor_cromosoma.aptitud},#{Cromosoma.num_evaluaciones},#{Cromosoma.num_evaluaciones * 100.0/total_evaluaciones_posibles},#{total_generaciones},#{tiempo_ejecucion}"
+		salida = "#{@num_cromosomas},#{total_generaciones},#{@mejor_cromosoma.aptitud},#{Cromosoma.num_evaluaciones},#{Cromosoma.num_evaluaciones * 100.0/total_evaluaciones_posibles},#{tiempo_ejecucion}"
 =begin
 		salida = "=======================ENTRADAS===========================\n"
 		salida += "La dimension del tablero fue #{@num_cromosomas}\n"
@@ -487,7 +487,7 @@ class AG_NReinas
 		archivo_salida = nil
 		if @bandera == 0 then
 			archivo_salida = open(nombre_arch, 'w')
-			txt_salida = "dimension del tablero,máximo de generaciones,mejor aptitud,evaluaciones,espacio explorado (%),generaciones,tiempo de ejecución (seg)\n" + txt_salida + "\n"
+			txt_salida = "dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)\n" + txt_salida + "\n"
 			archivo_salida.write(txt_salida)
 		elsif @bandera == 1 then
 			archivo_salida = open(nombre_arch, 'a')
