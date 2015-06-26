@@ -205,6 +205,10 @@ class NReinas < Array
 
 			}
 		tiempo_ejecucion = Time.now - tiempo_inicial
+		total_evaluaciones_posibles = (1..@num_cromosomas).reduce(1, :*)
+
+		salida = "#{@num_cromosomas},#{total_generaciones},#{@mejor_cromosoma.aptitud},#{Cromosoma.num_evaluaciones},#{Cromosoma.num_evaluaciones * 100.0/total_evaluaciones_posibles},#{total_generaciones},#{tiempo_ejecucion}"
+=begin
 		salida = "=======================ENTRADAS===========================\n"
 		salida += "La dimension del tablero fue #{@num_cromosomas}\n"
 		salida += "El maximo de generaciones fue #{num_generaciones}\n"
@@ -215,7 +219,9 @@ class NReinas < Array
 		salida += "El numero de evaluaciones fue  #{Cromosoma.num_evaluaciones} de un total de #{(1..@num_cromosomas).reduce(1, :*)}\n"
 		salida += "El total de generaciones fue  #{total_generaciones}\n"
 		salida += "El tiempo de ejecución fue de #{tiempo_ejecucion} segundos"
+=end
 		salida
+
 	end
 
 private
@@ -449,37 +455,44 @@ class AG_NReinas
 		txt_salida = nr.ejecutar @generaciones, @tipo_seleccion
 		nombre_arch = ""
 		if @tipo_seleccion == "torneo" then
-			system("cd torneo")
-			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
-			nombre_arch = ''
-			if @bandera == 0 then
-				nombre_arch = "torneo/#{num_arch + 1}"
-			elsif @bandera == 1 then
-				nombre_arch = "torneo/#{num_arch}"
-		end
-			system("cd ..")
+			#system("cd torneo")
+			#num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
+			#nombre_arch = ''
+			#if @bandera == 0 then
+			nombre_arch = "torneo/pruebas"
+		#	elsif @bandera == 1 then
+				#nombre_arch = "torneo/#{DateTime.now}"
+		#end
+			#system("cd ..")
 		elsif @tipo_seleccion == "diversidad" then
-			system("cd diversidad")
-			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
-			nombre_arch = ''
-			if @bandera == 0 then
-				nombre_arch = "diversidad/#{num_arch + 1}"
-			elsif @bandera == 1 then
-				nombre_arch = "diversidad/#{num_arch}"
-		end
-			system("cd ..")
+			#system("cd diversidad")
+			#num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
+		#	nombre_arch = ''
+			#if @bandera == 0 then
+				#nombre_arch = "diversidad/#{num_arch + 1}"
+		#	elsif @bandera == 1 then
+			nombre_arch = "diversidad/pruebas"
+	#	end
+			#system("cd ..")
 		elsif @tipo_seleccion == "elitismo" then
-			system("cd elitismo")
-			nombre_arch = ''
-			if @bandera == 0 then
-				nombre_arch = "elitismo/#{num_arch + 1}"
-			elsif @bandera == 1 then
-				nombre_arch = "elitismo/#{num_arch}"
+			#system("cd elitismo")
+		#	nombre_arch = ''
+			#if @bandera == 0 then
+				#nombre_arch = "elitismo/#{num_arch + 1}"
+		#	elsif @bandera == 1 then
+			nombre_arch = "elitismo/pruebas"
+	#	end
+		#	system("cd ..")
 		end
-			system("cd ..")
-		end
-		archivo_salida = open(nombre_arch, 'w')
-		archivo_salida.write(txt_salida)
+		archivo_salida = nil
+		if @bandera == 0 then
+			archivo_salida = open(nombre_arch, 'w')
+			txt_salida = "dimension del tablero,máximo de generaciones,mejor aptitud,evaluaciones,espacio explorado (%),generaciones,tiempo de ejecución (seg)\n" + txt_salida + "\n"
+			archivo_salida.write(txt_salida)
+		elsif @bandera == 1 then
+			archivo_salida = open(nombre_arch, 'a')
+			archivo_salida.puts(txt_salida)
+	end
 		archivo_salida.close
 	end
 
@@ -489,7 +502,7 @@ end
 
 if __FILE__ == $PROGRAM_NAME
 	if ARGV.size != 4 then
-		p "Error de argumentos, se esperaban 3 se recibieron #{ARGV.size}"
+		p "Error de argumentos, se esperaban 4 se recibieron #{ARGV.size}"
 		abort
 	end
 	ag = AG_NReinas.new

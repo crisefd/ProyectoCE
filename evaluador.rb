@@ -28,7 +28,7 @@ y con 5 pruebas por cada paso.
 class Evaluador
   #Constante entera que determina el aumento de la dimension del tablero
   #durante las iteraciones de prueba de una modalidad
-  $PASO = 15
+  $PASO = 1
 
 	#Constante entera que determina la cantidad de pruebas que se haran por cada
 	#iteración
@@ -63,11 +63,12 @@ private
     1.upto(5){|i|
       linea = ""
       1.upto($NUM_PRUEBAS){ |j|
-				if j == 1 then
-					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{0}"
+				if i == 1 and j== 1 then
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} 0"
 				else
-					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{1}"
-			end
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} 1"
+				end
+
         system(linea)
       }
       arg1 += $PASO
@@ -86,11 +87,12 @@ private
     1.upto(5){|i|
       linea = ""
 			1.upto($NUM_PRUEBAS){ |j|
-				if j == 1 then
-					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{0}"
+				if i == 1 and j== 1 then
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} 0"
 				else
-					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{1}"
-			end
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} 1"
+				end
+
         system(linea)
       }
       arg1 += $PASO
@@ -110,11 +112,12 @@ private
 			linea = ''
       #linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
 			1.upto($NUM_PRUEBAS){ |j|
-				if j == 1 then
-					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{0}"
+				if i == 1 and j== 1 then
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} 0"
 				else
-					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{1}"
-			end
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} 1"
+				end
+
         system(linea)
       }
 
