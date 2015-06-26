@@ -15,17 +15,24 @@ para realizar pruebas de ejecución al algoritmo genetico de las NReinas.
 Los resultados de las pruebas se almacenan en directorios cuyos nombres
 corresponden a los tres tipos de modalidad de selección del AG.
 
-Para ejecutar la prueba se usa el comando: ruby evaluador.rb <paso> <modalidades>
+Para ejecutar la prueba se usa el comando: ruby evaluador.rb <paso> <pruebas> <modalidades>
 Donde <paso> es un entero que determina que tanto aumentara la dimension
-del tablero durante las iteraciones de prueba de una modalidad. Y <modalidades>
+del tablero durante las iteraciones de prueba de una modalidad. <pruebas> es un entero
+que especifica la cantidad de pruebas que se hara por cada iteración. Y <modalidades>
 son las iniciales que representan el tipo de modalidad(t: torneo, d: diversidad, e:elitismo).
 
-Por ejemplo: ruby evaluador.rb 20 t d
+Por ejemplo: ruby evaluador.rb 20 5 t d
+Ejecutara el AG en las modalidades de torneo y elitismo con pasos de 20
+y con 5 pruebas por cada paso.
 =end
 class Evaluador
   #Constante entera que determina el aumento de la dimension del tablero
   #durante las iteraciones de prueba de una modalidad
-  $PASO = 2
+  $PASO = 15
+
+	#Constante entera que determina la cantidad de pruebas que se haran por cada
+	#iteración
+	$NUM_PRUEBAS = 3
 
 private
 
@@ -53,11 +60,11 @@ private
     arg1 = 8
     arg2 = "torneo"
     arg3 = 100000
-    0.upto(5){|i|
+    1.upto(5){|i|
       linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
-      #5.downto(0){ |j|
+      1.upto($NUM_PRUEBAS){ |j|
         system(linea)
-    #  }
+      }
       arg1 += $PASO
     }
     dd "OK"
@@ -71,11 +78,11 @@ private
     arg2 = "diversidad"
     arg3 = 100000
     dd "Evaluando por diversidad"
-    0.upto(5){|i|
+    1.upto(5){|i|
       linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
-    #  5.downto(0){ |j|
+			1.upto($NUM_PRUEBAS){ |j|
         system(linea)
-    #  }
+      }
       arg1 += $PASO
     }
     dd "OK"
@@ -89,11 +96,11 @@ private
     arg2 = "elitismo"
     arg3 = 100000
     dd "Evaluando por elitismo"
-    0.upto(5){|i|
+    1.upto(5){|i|
       linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
-    #  5.downto(0){ |j|
+			1.upto($NUM_PRUEBAS){ |j|
         system(linea)
-    #  }
+      }
 
       arg1 += $PASO
     }
@@ -108,6 +115,7 @@ public
   #@return [void]
   def evaluar
     $PASO = ARGV[0].to_i
+		$NUM_PRUEBAS = ARGV[1].to_i
     crear_diretorios_pruebas
     if ARGV.include? "t" then
       evaluar_por_torneo
