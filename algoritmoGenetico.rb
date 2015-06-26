@@ -428,6 +428,7 @@ class AG_NReinas
 		@dimension_tablero = ARGV[0].to_i
 		@tipo_seleccion = ARGV[1]
 		@generaciones = ARGV[2].to_i
+		@bandera = ARGV[3].to_i
 		if @tipo_seleccion == "t" then
 			@tipo_seleccion = "torneo"
 		elsif @tipo_seleccion == "d" then
@@ -450,17 +451,31 @@ class AG_NReinas
 		if @tipo_seleccion == "torneo" then
 			system("cd torneo")
 			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
-			nombre_arch = "torneo/#{num_arch + 1}"
+			nombre_arch = ''
+			if @bandera == 0 then
+				nombre_arch = "torneo/#{num_arch + 1}"
+			elsif @bandera == 1 then
+				nombre_arch = "torneo/#{num_arch}"
+		end
 			system("cd ..")
 		elsif @tipo_seleccion == "diversidad" then
 			system("cd diversidad")
 			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
-			nombre_arch = "diversidad/#{num_arch + 1}"
+			nombre_arch = ''
+			if @bandera == 0 then
+				nombre_arch = "diversidad/#{num_arch + 1}"
+			elsif @bandera == 1 then
+				nombre_arch = "diversidad/#{num_arch}"
+		end
 			system("cd ..")
 		elsif @tipo_seleccion == "elitismo" then
 			system("cd elitismo")
-			num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
-			nombre_arch = "elitismo/#{num_arch + 1}"
+			nombre_arch = ''
+			if @bandera == 0 then
+				nombre_arch = "elitismo/#{num_arch + 1}"
+			elsif @bandera == 1 then
+				nombre_arch = "elitismo/#{num_arch}"
+		end
 			system("cd ..")
 		end
 		archivo_salida = open(nombre_arch, 'w')
@@ -473,7 +488,7 @@ end
 
 
 if __FILE__ == $PROGRAM_NAME
-	if ARGV.size != 3 then
+	if ARGV.size != 4 then
 		p "Error de argumentos, se esperaban 3 se recibieron #{ARGV.size}"
 		abort
 	end

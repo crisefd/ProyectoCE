@@ -61,8 +61,13 @@ private
     arg2 = "torneo"
     arg3 = 100000
     1.upto(5){|i|
-      linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
+      linea = ""
       1.upto($NUM_PRUEBAS){ |j|
+				if j == 1 then
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{0}"
+				else
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{1}"
+			end
         system(linea)
       }
       arg1 += $PASO
@@ -79,8 +84,13 @@ private
     arg3 = 100000
     dd "Evaluando por diversidad"
     1.upto(5){|i|
-      linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
+      linea = ""
 			1.upto($NUM_PRUEBAS){ |j|
+				if j == 1 then
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{0}"
+				else
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{1}"
+			end
         system(linea)
       }
       arg1 += $PASO
@@ -97,9 +107,14 @@ private
     arg3 = 100000
     dd "Evaluando por elitismo"
     1.upto(5){|i|
-
-      linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
+			linea = ''
+      #linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3}"
 			1.upto($NUM_PRUEBAS){ |j|
+				if j == 1 then
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{0}"
+				else
+					linea = "ruby algoritmoGenetico.rb #{arg1} #{arg2} #{arg3} #{1}"
+			end
         system(linea)
       }
 
