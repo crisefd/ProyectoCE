@@ -6,8 +6,6 @@
 # Creation date: 2015-05-19 21:20
 require 'rubygems'
 require 'bundler/setup'
-#require 'date'
-
 def dd arg
 	p arg
  end
@@ -423,6 +421,15 @@ end
 Clase principal de la aplicacion.
 Realiza funciones de entrada de datos por consola
 y escritura de los resultados en archivos de texto plano
+
+Para ejecutar el AG utilize el comando:
+ruby algoritmo_genetico.rb <dimension_tablero> <tipo_seleccion> <generaciones>
+
+Donde: <dimension_tablero> es un número entero que representa el tamaño de tablero
+			<tipo_seleccion> es la inicial que representa el tipo de selección (torneo, diversidad, elitismo)
+			<generaciones> es un número entero que representa la cantidad máxima de generaciones en las cuales se ejecutara el AG
+Por ejemplo:
+ruby algoritmo_genetico.rb 8 t 100
 =end
 class AG_NReinas
 
@@ -434,7 +441,9 @@ class AG_NReinas
 		@dimension_tablero = ARGV[0].to_i
 		@tipo_seleccion = ARGV[1]
 		@generaciones = ARGV[2].to_i
-		@bandera = ARGV[3].to_i
+		if ARGV.size == 4 then
+			@bandera = ARGV[3].to_i
+		end
 		if @tipo_seleccion == "t" then
 			@tipo_seleccion = "torneo"
 		elsif @tipo_seleccion == "d" then
@@ -453,58 +462,46 @@ class AG_NReinas
 		nr = NReinas.new
 		nr.inicializar_cromosomas @dimension_tablero
 		txt_salida = nr.ejecutar @generaciones, @tipo_seleccion
-		nombre_arch = ""
-		if @tipo_seleccion == "torneo" then
-			#system("cd torneo")
-			#num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
-			#nombre_arch = ''
-			#if @bandera == 0 then
-			nombre_arch = "torneo/pruebas"
-		#	elsif @bandera == 1 then
-				#nombre_arch = "torneo/#{DateTime.now}"
-		#end
-			#system("cd ..")
-		elsif @tipo_seleccion == "diversidad" then
-			#system("cd diversidad")
-			#num_arch = Dir.glob(File.join(Dir.pwd, "**", "*")).count
-		#	nombre_arch = ''
-			#if @bandera == 0 then
-				#nombre_arch = "diversidad/#{num_arch + 1}"
-		#	elsif @bandera == 1 then
-			nombre_arch = "diversidad/pruebas"
-	#	end
-			#system("cd ..")
-		elsif @tipo_seleccion == "elitismo" then
-			#system("cd elitismo")
-		#	nombre_arch = ''
-			#if @bandera == 0 then
-				#nombre_arch = "elitismo/#{num_arch + 1}"
-		#	elsif @bandera == 1 then
-			nombre_arch = "elitismo/pruebas"
-	#	end
-		#	system("cd ..")
-		end
-		archivo_salida = nil
-		if @bandera == 0 then
+		if ARGV.size == 4 then
+				nombre_arch = ""
+				if @tipo_seleccion == "torneo" then
+					nombre_arch = "torneo/pruebas"
+				elsif @tipo_seleccion == "diversidad" then
+					nombre_arch = "diversidad/pruebas"
+				elsif @tipo_seleccion == "elitismo" then
+					nombre_arch = "elitismo/pruebas"
+				end
+				archivo_salida = nil
+				if @bandera == 0 then
+					archivo_salida = open(nombre_arch, 'w')
+					txt_salida = "dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)\n" + txt_salida + "\n"
+					archivo_salida.write(txt_salida)
+				elsif @bandera == 1 then
+					archivo_salida = open(nombre_arch, 'a')
+					archivo_salida.puts(txt_salida)
+			end
+					archivo_salida.close
+		elsif ARGV.size == 3 then
+			nombre_arch = ""
+			if @tipo_seleccion == "torneo" then
+				nombre_arch = "torneo-#{Time.now.to_s}"
+			elsif @tipo_seleccion == "diversidad" then
+				nombre_arch = "diversidad-#{Time.now.to_s}"
+			elsif @tipo_seleccion == "elitismo" then
+				nombre_arch = "elitismo-#{Time.now.to_s}"
+			end
+
 			archivo_salida = open(nombre_arch, 'w')
 			txt_salida = "dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)\n" + txt_salida + "\n"
 			archivo_salida.write(txt_salida)
-		elsif @bandera == 1 then
-			archivo_salida = open(nombre_arch, 'a')
-			archivo_salida.puts(txt_salida)
+			archivo_salida.close
+		end
 	end
-		archivo_salida.close
-	end
-
 
 end
 
 
 if __FILE__ == $PROGRAM_NAME
-	if ARGV.size != 4 then
-		p "Error de argumentos, se esperaban 4 se recibieron #{ARGV.size}"
-		abort
-	end
 	ag = AG_NReinas.new
 	ag.ejecutar_AG
 end
