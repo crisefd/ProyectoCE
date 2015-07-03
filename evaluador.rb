@@ -27,7 +27,7 @@ que especifica la cantidad de pruebas que se hara por cada iteración.
  <modalidades>
 son las iniciales que representan el tipo de modalidad(t: torneo, d: diversidad, e:elitismo).
 
-Por ejemplo: ruby evaluador.rb 5 20 5 3 8 1000 t d
+Por ejemplo: ruby evaluador.rb 5 20 5 8 1000 t d
 =end
 class Evaluador
   #Constante entera que determina el aumento de la dimension del tablero
