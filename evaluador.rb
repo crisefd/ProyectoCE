@@ -1,4 +1,4 @@
-#!/home/crisefd/.rvm/rubies/ruby-2.1.5/bin/ruby
+#!~/.rvm/rubies/ruby-2.1.5/bin/ruby
 # encoding: utf-8
 # Program: evaluador.rb
 # Author: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
@@ -34,18 +34,18 @@ class Evaluador
   #durante las iteraciones de prueba de una modalidad
   $PASO = 0
 
-	#Constante entera que determina la cantidad de pruebas que se haran por cada
-	#iteración
-	$NUM_PRUEBAS = 0
+  #Constante entera que determina la cantidad de pruebas que se haran por cada
+  #iteración
+  $NUM_PRUEBAS = 0
 
-	#Constante entera que determina la dimensión del tablero
-	$DIMENSION_TABLERO = 8
+  #Constante entera que determina la dimensión del tablero
+  $DIMENSION_TABLERO = 8
 
-	#Constante entera que determian la máxima cantidad de generacioens en el AG
-	$GENERACIONES = 100000
+  #Constante entera que determian la máxima cantidad de generacioens en el AG
+  $GENERACIONES = 100000
 
-	#Constante entera que determina la cantidad de iteraciones del AG
-	$ITERACIONES = 5
+  #Constante entera que determina la cantidad de iteraciones del AG
+  $ITERACIONES = 5
 
 private
 
