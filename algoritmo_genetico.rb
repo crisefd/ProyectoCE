@@ -7,7 +7,7 @@
 require 'rubygems'
 require 'bundler/setup'
 def dd arg
-	p arg
+	#p arg
  end
 
 =begin
@@ -191,6 +191,7 @@ class NReinas < Array
 		total_generaciones = 0
 		tiempo_inicial = Time.now
 		1.upto(num_generaciones){|generacion|
+			dd "============> Generacion: #{generacion}"
 			total_generaciones = generacion
 			res = evaluar_cromosomas!
 			if res == 'detener' then
@@ -377,38 +378,34 @@ private
 			self[i].diversidad = array_cuentas[k]
 		}
 
-		cromosomas_ordenados = self.sort{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
-		#p "Cromosomas ordenado #{cromosomas_ordenados}"
-		p = (0.1 * @num_cromosomas).to_i
-		banderas_crom_elitistas = Array.new @num_cromosomas, 0
-		for i in 0..p
-			banderas_crom_elitistas[i] = 1
-		end
-
+		sort!{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
+		num_cromosomas_elite = (0.1 * @num_cromosomas).to_i
+		dd "num_cromosomas_elite #{num_cromosomas_elite}"
 		k = 2
 		x = -1
 		y = -1
 		k.downto(1) { |n|
+			dd "Antes del torneo\n #{self}"
 			while true do
-				x = rand(0...@num_cromosomas)
-				y = rand(0...@num_cromosomas)
-				#p "x = #{x}, y= #{y}"
-				if x != y && banderas_crom_elitistas[x] == 0 && banderas_crom_elitistas[y] == 0 then
+				x = rand(num_cromosomas_elite...@num_cromosomas)
+				y = rand(num_cromosomas_elite...@num_cromosomas)
+				if x != y then
 					break
 				end
 			end
-			#p "x = #{x}, y= #{y}"
+			dd "torneo entre los cromosomas de las posiciones #{x} y #{y}"
 			crom_1 = self[x]
 			crom_2 = self[y]
-			#p "cromosoma 1 =#{crom_1}, cromosoma 2=#{crom_2}"
 			if crom_1.aptitud > crom_2.aptitud then
-			#	p "El cromosoma 1 gana"
-				delete_at y
-				push Cromosoma.mutar(crom_1)
+				insert num_cromosomas_elite, Cromosoma.mutar(crom_1)
+				delete_at y + 1
+				dd "crom_1 gana"
+				dd "Despues del torneo\n #{self}"
 			else
-				#p "El cromosoma 2 gana"
-				delete_at x
-				push Cromosoma.mutar(crom_2)
+				insert num_cromosomas_elite, Cromosoma.mutar(crom_2)
+				delete_at x + 1
+				dd "crom_2 gana"
+				dd "Despues del torneo\n #{self}"
 			end
 		}
 	end
