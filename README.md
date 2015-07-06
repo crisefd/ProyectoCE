@@ -112,7 +112,7 @@ Para mayor información sobre Cucumber, visitar: https://cucumber.io/
 
 Para ejecutar el programa desde terminal:
 
-	$ ruby aplicacion.rb
+	$ ruby algoritmo_genetico.rb <dimension tablero> <tipo seleccion> <generaciones>
 
 Para generar la documentaciónos de YARD, debe colocar los archivos fuente(.rb) en una subcarpeta llamada "lib" y 
 desde el directorio raíz (/../dir_raiz/lib/aplicacion.rb) se usa el comando:
