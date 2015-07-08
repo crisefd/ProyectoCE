@@ -1,8 +1,8 @@
 #!~/.rvm/rubies/ruby-2.1.5/bin/ruby
 # encoding: utf-8
 # Program: evaluador.rb
-# Author: Cristhian Fuertes, Fabian Cano, Oscar Tigreros
-# Email: cristhian.fuertes@correounivalle.edu.co, fabian.cano@correounivalle.edu.co, oscar.tigreros@correounivalle.edu.co
+# Author: Cristhian Fuertes, Oscar Tigreros
+# Email: cristhian.fuertes@correounivalle.edu.co,oscar.tigreros@correounivalle.edu.co
 # Creation date: 2015-06-24 19:00
 
 def dd arg
