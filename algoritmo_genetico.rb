@@ -206,7 +206,7 @@ class NReinas < Array
 		tiempo_ejecucion = Time.now - tiempo_inicial
 		total_evaluaciones_posibles = (1..@num_cromosomas).reduce(1, :*)
 
-		salida = "#{@num_cromosomas},#{total_generaciones},#{@mejor_cromosoma.aptitud},#{Cromosoma.num_evaluaciones},#{Cromosoma.num_evaluaciones * 100.0/total_evaluaciones_posibles},#{tiempo_ejecucion}"
+		salida = "#{@num_cromosomas};#{total_generaciones};#{@mejor_cromosoma.aptitud.to_s.gsub('.', ',').to_f};#{Cromosoma.num_evaluaciones.to_s.gsub('.', ',').to_f};#{(Cromosoma.num_evaluaciones * 100.0/total_evaluaciones_posibles).to_s.gsub('.', ',').to_f};#{tiempo_ejecucion.to_s.gsub('.', ',').to_f}"
 =begin
 		salida = "=======================ENTRADAS===========================\n"
 		salida += "La dimension del tablero fue #{@num_cromosomas}\n"
@@ -462,11 +462,11 @@ class AG_NReinas
 		if ARGV.size == 4 then
 				nombre_arch = ""
 				if @tipo_seleccion == "torneo" then
-					nombre_arch = "torneo/pruebas"
+					nombre_arch = "torneo/pruebas-#{Time.now.to_s}.csv"
 				elsif @tipo_seleccion == "diversidad" then
-					nombre_arch = "diversidad/pruebas"
+					nombre_arch = "diversidad/pruebas-#{Time.now.to_s}.csv"
 				elsif @tipo_seleccion == "elitismo" then
-					nombre_arch = "elitismo/pruebas"
+					nombre_arch = "elitismo/pruebas-#{Time.now.to_s}.csv"
 				end
 				archivo_salida = nil
 				if @bandera == 0 then
@@ -481,11 +481,11 @@ class AG_NReinas
 		elsif ARGV.size == 3 then
 			nombre_arch = ""
 			if @tipo_seleccion == "torneo" then
-				nombre_arch = "torneo-#{Time.now.to_s}"
+				nombre_arch = "torneo-#{Time.now.to_s}.csv"
 			elsif @tipo_seleccion == "diversidad" then
-				nombre_arch = "diversidad-#{Time.now.to_s}"
+				nombre_arch = "diversidad-#{Time.now.to_s}.csv"
 			elsif @tipo_seleccion == "elitismo" then
-				nombre_arch = "elitismo-#{Time.now.to_s}"
+				nombre_arch = "elitismo-#{Time.now.to_s}.csv"
 			end
 
 			archivo_salida = open(nombre_arch, 'w')
