@@ -206,7 +206,7 @@ class NReinas < Array
 		tiempo_ejecucion = Time.now - tiempo_inicial
 		total_evaluaciones_posibles = (1..@num_cromosomas).reduce(1, :*)
 
-		salida = "#{@num_cromosomas};#{total_generaciones};#{@mejor_cromosoma.aptitud.to_s.gsub('.', ',').to_f};#{Cromosoma.num_evaluaciones.to_s.gsub('.', ',').to_f};#{(Cromosoma.num_evaluaciones * 100.0/total_evaluaciones_posibles).to_s.gsub('.', ',').to_f};#{tiempo_ejecucion.to_s.gsub('.', ',').to_f}"
+		salida = "#{@num_cromosomas};#{total_generaciones};#{@mejor_cromosoma.aptitud.to_s.gsub('.', ',')};#{Cromosoma.num_evaluaciones.to_s.gsub('.', ',')};#{(Cromosoma.num_evaluaciones * 100.0/total_evaluaciones_posibles).to_s.gsub('.', ',')};#{tiempo_ejecucion.to_s.gsub('.', ',')}"
 =begin
 		salida = "=======================ENTRADAS===========================\n"
 		salida += "La dimension del tablero fue #{@num_cromosomas}\n"
@@ -459,14 +459,17 @@ class AG_NReinas
 		nr = NReinas.new
 		nr.inicializar_cromosomas @dimension_tablero
 		txt_salida = nr.ejecutar @generaciones, @tipo_seleccion
+    num_archivos = 0
 		if ARGV.size == 4 then
+
+        num_archivos = Dir[File.join(@tipo_seleccion, '**', '*')].count { |file| File.file?(file) }
 				nombre_arch = ""
 				if @tipo_seleccion == "torneo" then
-					nombre_arch = "torneo/pruebas-#{Time.now.to_s}.csv"
+					nombre_arch = "torneo/pruebas-#{num_archivos + 1}.csv"
 				elsif @tipo_seleccion == "diversidad" then
-					nombre_arch = "diversidad/pruebas-#{Time.now.to_s}.csv"
+					nombre_arch = "diversidad/pruebas-#{num_archivos + 1}.csv"
 				elsif @tipo_seleccion == "elitismo" then
-					nombre_arch = "elitismo/pruebas-#{Time.now.to_s}.csv"
+					nombre_arch = "elitismo/pruebas-#{num_archivos + 1}.csv"
 				end
 				archivo_salida = nil
 				if @bandera == 0 then
@@ -474,7 +477,7 @@ class AG_NReinas
 					txt_salida = "dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)\n" + txt_salida + "\n"
 					archivo_salida.write(txt_salida)
 				elsif @bandera == 1 then
-					archivo_salida = open(nombre_arch, 'a')
+					archivo_salida = open("#{@tipo_seleccion}/pruebas-#{num_archivos}.csv", 'a')
 					archivo_salida.puts(txt_salida)
 			end
 					archivo_salida.close
