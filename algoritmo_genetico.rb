@@ -474,7 +474,7 @@ class AG_NReinas
 				archivo_salida = nil
 				if @bandera == 0 then
 					archivo_salida = open(nombre_arch, 'w')
-					txt_salida = "dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)\n" + txt_salida + "\n"
+					txt_salida = "dimension del tablero;generaciones;mejor aptitud;evaluaciones;espacio explorado (%);tiempo de ejecución (seg)\n" + txt_salida + "\n"
 					archivo_salida.write(txt_salida)
 				elsif @bandera == 1 then
 					archivo_salida = open("#{@tipo_seleccion}/pruebas-#{num_archivos}.csv", 'a')
