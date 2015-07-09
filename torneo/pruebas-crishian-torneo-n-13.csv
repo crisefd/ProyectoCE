@@ -1,4 +1,4 @@
-dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)
+dimension del tablero;generaciones;mejor aptitud;evaluaciones;espacio explorado (%);tiempo de ejecución (seg)
 13;1331;-0,0;17302;0,00027785357646468756;1,883301713
 13;888;-0,0;11544;0,00018538560205226873;1,251149918
 13;343;-0,0;4459;7,160727646838758e-05;0,487494867
