@@ -492,7 +492,7 @@ class AG_NReinas
 			end
 
 			archivo_salida = open(nombre_arch, 'w')
-			txt_salida = "dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)\n" + txt_salida + "\n"
+			txt_salida = "dimension del tablero;generaciones;mejor aptitud;evaluaciones;espacio explorado (%);tiempo de ejecución (seg)\n" + txt_salida + "\n"
 			archivo_salida.write(txt_salida)
 			archivo_salida.close
 		end
