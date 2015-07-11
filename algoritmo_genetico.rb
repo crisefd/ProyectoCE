@@ -380,6 +380,9 @@ private
 
 		sort!{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
 		num_cromosomas_elite = (0.1 * @num_cromosomas).to_i
+    if num_cromosomas_elite < 1 then
+      num_cromosomas_elite = 1
+    end
 		dd "num_cromosomas_elite #{num_cromosomas_elite}"
 		k = 2
 		x = -1
