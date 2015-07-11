@@ -380,6 +380,9 @@ private
 
 		sort!{|crom_izq, crom_der| crom_izq.diversidad <=> crom_der.diversidad}
 		num_cromosomas_elite = (0.1 * @num_cromosomas).to_i
+    if num_cromosomas_elite < 1 then
+      num_cromosomas_elite = 1
+    end
 		dd "num_cromosomas_elite #{num_cromosomas_elite}"
 		k = 2
 		x = -1
@@ -474,7 +477,7 @@ class AG_NReinas
 				archivo_salida = nil
 				if @bandera == 0 then
 					archivo_salida = open(nombre_arch, 'w')
-					txt_salida = "dimension del tablero,generaciones,mejor aptitud,evaluaciones,espacio explorado (%),tiempo de ejecución (seg)\n" + txt_salida + "\n"
+					txt_salida = "dimension del tablero;generaciones;mejor aptitud;evaluaciones;espacio explorado (%);tiempo de ejecución (seg)\n" + txt_salida + "\n"
 					archivo_salida.write(txt_salida)
 				elsif @bandera == 1 then
 					archivo_salida = open("#{@tipo_seleccion}/pruebas-#{num_archivos}.csv", 'a')
