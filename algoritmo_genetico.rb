@@ -45,6 +45,10 @@ class Cromosoma < Array
 	#	@return [Integer] un valor >= 0 que indica la cantidad de genes del cromosoma
 	attr_accessor :num_genes
 
+
+  attr_accessor :probabilidad
+
+
 	#Método que da valores al azar a los genes y garantiza
 	#que no se repitan.
 	#
@@ -271,10 +275,16 @@ private
 		if tipo_seleccion == 'torneo'
 			seleccionar_por_torneo!
 		elsif tipo_seleccion == 'diversidad' then
-			seleccionar_por_diversidad!
+			#seleccionar_por_diversidad!
 		elsif tipo_seleccion == 'elitismo' then
 			seleccionar_por_elitismo!
-	  end
+    elsif tipo_seleccion == 'ruleta' then
+      seleccionar_por_ruleta!
+    elsif tipo_seleccion == 'muestreo' then
+      seleccionar_por_muestreo!
+    elsif tipo_seleccion == "truncamiento" then
+      seleccionar_por_truncamiento!
+    end
 	end
 
 	#Método que selecciona los cromosomas por torneo.
@@ -317,43 +327,130 @@ private
 	#
 	#@return [void]
 	def seleccionar_por_diversidad!
-		aptitudes = Array.new(@num_cromosomas)
+    aptitudes = Array.new @num_cromosomas
 		aptitudes.each_index { |i|
 			aptitudes[i] = self[i].aptitud
 		}
-		#p "Aptitudes = #{aptitudes}"
 		max = aptitudes.max.to_i
 		min = aptitudes.min.to_i
-		#p "min #{min}"
-		#p "max #{max}"
 		array_cuentas = Array.new -1 * min, 0
 		aptitudes.each{|aptitud|
 			k = (-1 * aptitud.to_i) - 1
 			array_cuentas[k] += 1
 		}
-		#p "Array cuentas = #{array_cuentas}"
-		my_min = lambda{|array|
-			min_ = array.max
-			array.each{|e|
-			if e <= min_ && e > 0 then
-				min_ = e
-			end
-			}
-			return min_
+    sum_diversidades = 0
+		each_index{|i|
+			k = (-1 * aptitudes[i].to_i) - 1
+			self[i].diversidad = array_cuentas[k]
+      sum_diversidades += self[i].diversidad
 		}
-		min_cuentas = my_min.call array_cuentas
-		#p "min_cuentas = #{min_cuentas}"
-		ind_1 = array_cuentas.index(min_cuentas)
-		#p "ind_1 = #{ind_1}"
-		#ind_2 = aptitudes[ind_1]
-		ind_2 = aptitudes.index((-1.0 * (ind_1 + 1)))
-		#p "ind_2 = #{ind_2}, aptitudes[ind_2] = #{aptitudes[ind_2]}"
-		cromosoma = self[ind_2].clone
-		cromosoma.diversidad = min_cuentas
-		#p "El cromosoma #{cromosoma} con aptitud= #{cromosoma.aptitud} y diversidad = #{cromosoma.diversidad} es el mejor"
-		self.delete_at ind_1
-		self.push Cromosoma.mutar(cromosoma)
+    prob_acum = Array.new @num_cromosomas
+    each_index{|i|
+      self[i].probabilidad = 1.0 - (self[i].diversidad / sum_diversidades.to_f)
+    }
+    sort!{|crom_izq, crom_der| crom_izq.probabilidad <=> crom_der.probabilidad}
+    each_index{|i|
+      if i == 0 then
+          prob_acum[i] = self[i].probabilidad
+      else
+          prob_acum[i] = self[i].probabilidad + prob_acum[i - 1]
+      end
+    }
+    ind = NReinas.selecc_ind_ruleta prob_acum
+    crom = self[ind]
+    delete_at ind
+    push Cromosoma.mutar(crom)
+		#
 	end
+
+  def seleccionar_por_muestreo!
+    sum_aptitudes = 0.0
+    each{|crom|
+      sum_aptitudes += -1.0 * crom.aptitud
+    }
+    num_seleccionados = 1 * (0.5 * @num_cromosomas).to_i
+    if num_seleccionados < 1 then
+      num_seleccionados = 1.0
+    end
+    distancia_apuntadores = sum_aptitudes / num_seleccionados
+    inicio = rand(0..distancia_apuntadores)
+    ind = 0
+    sum = -1.0 * self[ind].aptitud
+    1.upto(num_seleccionados){|i|
+      apuntador = inicio + i * distancia_apuntadores
+      if sum >= apuntador then
+        crom = self[ind]
+        delete_at ind
+        push Cromosoma.mutar(crom)
+      else
+        ind += 1
+        while ind < @num_cromosomas
+           sum += -1.0 * self[ind].aptitud;
+           if sum >= apuntador then
+                crom = self[ind]
+                delete_at ind
+                push Cromosoma.mutar(crom)
+                break;
+            end
+          ind += 1
+
+        end
+
+        end
+
+    }
+  end
+
+  def seleccionar_por_ruleta!
+    prob_acum = Array.new @num_cromosomas, 0
+    sum_aptitudes = 0.0
+    each{|crom|
+      sum_aptitudes += -1 * crom.aptitud
+    }
+    each_index{|i|
+      self[i].probabilidad = 1.0 - (-1 * self[i].aptitud / sum_aptitudes)
+    }
+    sort!{|crom_izq, crom_der| crom_izq.probabilidad <=> crom_der.probabilidad}
+    each_index{|i|
+      if i == 0 then
+          prob_acum[i] = self[i].probabilidad
+      else
+          prob_acum[i] = self[i].probabilidad + prob_acum[i - 1]
+      end
+    }
+    ind = NReinas.selecc_ind_ruleta prob_acum
+    crom = self[ind]
+    delete_at ind
+    push Cromosoma.mutar(crom)
+  end
+
+
+  def seleccionar_por_truncamiento!
+    trunc = (0.2 * @num_cromosomas).to_i
+    if trunc < 1 then
+      trunc = 1
+    end
+    sort!{|crom_izq, crom_der| crom_izq.aptitud <=> crom_der.aptitud}
+    cromosomas_mutados = []
+    1.upto(trunc){|i|
+      cromosomas_mutados.push Cromosoma.mutar(self.pop)
+    }
+    cromosomas_mutados.each{|crom|
+      push crom
+    }
+  end
+
+  def self.selecc_ind_ruleta(prob_acum)
+    r = rand(0..10)/10.0
+    prob_acum.each_index{|i|
+      if r < prob_acum[i] then
+       return i
+      end
+  }
+    return prob_acum.size - 1 # This shouldn't happen
+  end
+
+
 
 	#Método mixto (con torneo y diversidad). Los cromosomas se ordenan
 	#ascendentemente deacuerdo a su diversidad. El 10% que se encuentre en el top
@@ -450,6 +547,13 @@ class AG_NReinas
 			@tipo_seleccion = "diversidad"
 		elsif @tipo_seleccion == "e" then
 			@tipo_seleccion = "elitismo"
+    elsif @tipo_seleccion == "r" then
+      @tipo_seleccion = "ruleta"
+    elsif @tipo_seleccion == "m" then
+      @tipo_seleccion = "muestreo"
+    elsif @tipo_seleccion == "tr" then
+      @tipo_seleccion = "truncamiento"
+
 		end
 	end
 
@@ -492,6 +596,14 @@ class AG_NReinas
 				nombre_arch = "diversidad-#{Time.now.to_s}.csv"
 			elsif @tipo_seleccion == "elitismo" then
 				nombre_arch = "elitismo-#{Time.now.to_s}.csv"
+      elsif @tipo_seleccion == "ruleta" then
+        nombre_arch = "ruleta-#{Time.now.to_s}.csv"
+      elsif @tipo_seleccion == "muestreo" then
+        nombre_arch = "muestreo-#{Time.now.to_s}.csv"
+      elsif @tipo_seleccion == "truncamiento" then
+        nombre_arch = "truncamiento-#{Time.now.to_s}.csv"
+
+
 			end
 
 			archivo_salida = open(nombre_arch, 'w')
